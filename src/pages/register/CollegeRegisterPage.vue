@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-view/>
+    <h1>College Register Page</h1>
   </div>
 </template>
 
