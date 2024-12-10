@@ -1,28 +1,40 @@
 <template>
-  <div id="loginPage">
-    <h1>学生登录</h1>
-    <el-form 
-      :model="loginForm"
-    >
-      <el-form-item label="账号">
-        <el-input
-          placeholder="请输入账号"
-          v-model="loginForm.username"
-        />
-      </el-form-item>
-      <el-form-item label="密码">
-        <el-input 
-          placeholder="请输入密码"
-          show-password 
-          v-model="loginForm.password"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="login">
-          登录
-        </el-button>
-      </el-form-item>
-    </el-form>
+  <div id="studentLoginPage">
+    <el-container>
+      <el-aside width="200px">
+        网站logo
+      </el-aside>
+      <el-container>
+        <el-header>
+          学生登录 <el-button type="primary" @click="navigateTo('/login/college')">切换学院登录</el-button>
+        </el-header>
+        <el-main>
+          <el-form 
+            :model="loginForm"
+          >
+            <el-form-item label="账号">
+              <el-input
+                placeholder="请输入学号/手机号/邮箱"
+                v-model="loginForm.username"
+              />
+            </el-form-item>
+            <el-form-item label="密码">
+              <el-input 
+                placeholder="请输入密码"
+                show-password 
+                v-model="loginForm.password"
+              />
+            </el-form-item>
+          </el-form>
+          <el-button type="primary" @click="login">
+            登录
+          </el-button>
+        </el-main>
+        <el-footer>
+          <el-link @click="navigateTo('/register/student')">还没有账号？点击注册</el-link>
+        </el-footer>
+      </el-container>
+    </el-container>        
   </div>
 </template>
 
@@ -57,6 +69,14 @@
       return;
     }
     console.log(loginForm);
+  }
+
+  import { useRouter } from 'vue-router'
+
+  const router = useRouter()
+
+  function navigateTo(path) {
+    router.push(path)
   }
 </script>
 
