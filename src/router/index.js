@@ -42,6 +42,17 @@ const routes = [
       }
     ]
   },
+  {
+    path: '/personalCenter',
+    component: () => import('@/pages/PersonalCenter/Layout.vue'), // 父级布局组件
+    children: [
+      {
+        path: 'personalInfo',
+        name: 'PersonalInfo',
+        component: () => import('@/pages/PersonalCenter/PersonalInfo.vue'), // 个人资料页面
+      },
+    ],
+  },
 ]
 
 const router = createRouter({
