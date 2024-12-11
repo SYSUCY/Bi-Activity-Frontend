@@ -10,6 +10,7 @@
       <el-menu-item index="/activityQuery">活动查询</el-menu-item>
       <el-menu-item index="/myActivity">我的活动</el-menu-item>
       <el-menu-item index="/helpCenter">帮助中心</el-menu-item>
+      <el-menu-item index="/studentPersonalCenter/personalInfo">学生个人中心</el-menu-item>
     </el-menu>
     <div class="user-actions">
       <el-button type="primary" @click="navigateTo('/login')">登录</el-button>
@@ -49,7 +50,7 @@ const navigateTo = (path) => {
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
 }
 
 .el-menu-demo {

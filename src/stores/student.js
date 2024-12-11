@@ -4,7 +4,7 @@ import {defineStore} from 'pinia'
 const useStudentStore = defineStore('student', () =>{
   const data = reactive({
     name: "",
-    id: "",
+    id: "6",
     token: "",
     expireDate: ""  //token过期时间
   })

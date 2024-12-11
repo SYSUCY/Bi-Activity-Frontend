@@ -22,7 +22,7 @@
 
 <style  scoped>
 #basicLayout .footer {
-  background: #efefef;
+  background: #f8f9fa;
   padding: 16px;
   position: fixed;
   bottom: 0;
@@ -32,7 +32,8 @@
 }
 
 #basicLayout .content{
-  background: linear-gradient(to right, #fefefe, #fff);
+  /* background: linear-gradient(to right, #fefefe, #fff); */
+  background: #f8f9fa;
   margin-bottom: 28px;
   padding: 20px;
 }

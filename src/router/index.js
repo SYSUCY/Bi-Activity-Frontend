@@ -43,13 +43,43 @@ const routes = [
     ]
   },
   {
-    path: '/personalCenter',
-    component: () => import('@/pages/PersonalCenter/Layout.vue'), // 父级布局组件
+    path: '/studentPersonalCenter',
+    component: () => import('@/pages/studentPersonalCenter/Layout.vue'), // 父级布局组件
     children: [
       {
         path: 'personalInfo',
-        name: 'PersonalInfo',
-        component: () => import('@/pages/PersonalCenter/PersonalInfo.vue'), // 个人资料页面
+        name: 'personalInfo',
+        component: () => import('@/pages/studentPersonalCenter/PersonalInfo.vue'), // 个人资料页面
+      },
+      {
+        path: 'affiliatedOrganizations',
+        name: 'affiliatedOrganizations',
+        component: () => import('@/pages/studentPersonalCenter/AffiliatedOrganizations.vue'),//归属组织
+      },
+      {
+        path: 'myMessages',
+        name: 'myMessages',
+        component: () => import('@/pages/studentPersonalCenter/MyMessages.vue'),//我的消息
+      },
+      {
+        path: 'activityRecords',
+        name: 'activityRecords',
+        component: () => import('@/pages/studentPersonalCenter/ActivityRecords.vue'),//活动记录
+      },
+      {
+        path: 'publishActivity',
+        name: 'publishActivity',
+        component: () => import('@/pages/studentPersonalCenter/PublishActivity.vue'),//发布活动
+      },
+      {
+        path: 'activityAdmissions',
+        name: 'activityAdmissions',
+        component: () => import('@/pages/studentPersonalCenter/ActivityAdmissions.vue'),//活动录取
+      },
+      {
+        path: 'securitySettings',
+        name: 'SecuritySettings',
+        component: () => import('@/pages/studentPersonalCenter/SecuritySettings.vue'), // 安全设置
       },
     ],
   },
