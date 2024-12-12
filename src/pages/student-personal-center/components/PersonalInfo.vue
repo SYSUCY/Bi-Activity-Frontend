@@ -58,6 +58,9 @@
 import { useStudentStore } from "@/stores/student";
 import myAxios from "@/request";
 
+const studentStore = useStudentStore();
+const studentId = studentStore.data.id
+let collegeId = 0
 export default {
   name: "PersonalInfo",
   data() {
@@ -94,7 +97,7 @@ export default {
     };
   },
   mounted() {
-    const studentStore = useStudentStore();
+    // const studentStore = useStudentStore();
     if (studentStore.data.id) {
       this.loadStudentInfo(studentStore.data.id);
     } else {
@@ -105,7 +108,7 @@ export default {
     async loadStudentInfo(studentId) {
       try {
         // 向后端发送请求
-        const response = await myAxios.get(`/Bi-Activity/personalCenter/personalInfo/${studentId}`);
+        const response = await myAxios.get(`/api/studentPersonalCenter/studentPersonalInfo/${studentId}`);
         const data = response.data;
 
         // 填充表单数据
@@ -115,9 +118,20 @@ export default {
         this.form.gender = data.gender == 1 ? "男" : "女";
         this.form.phone = data.student_phone || "";
         this.form.email = data.student_email || "";
-        
-        const collegeId = data.college_id;
-        console.log(collegeId)
+
+        collegeId = data.college_id
+
+        if (data.college_id) {
+          try {
+            const collegeResponse = await myAxios.get(`/api/studentPersonalCenter/affiliatedOrganizations/${studentId}`);
+            this.form.college = collegeResponse.data.data.college_name || "未知学院";
+          } catch (error) {
+            console.error("获取学院信息失败", error);
+            this.form.college = "获取学院信息失败";
+          }
+        } else {
+          this.form.college = "暂无学院";
+        }
 
       } catch (error) {
         console.error("加载用户信息失败", error);
@@ -126,8 +140,18 @@ export default {
 
     // 提交表单
     async onSubmit() { // To do
-      try {
-        await axios.put(`/api/user/${this.form.studentId}`, this.form);
+      try { 
+        // alert(this.form.gender)
+        const payload = {
+          student_id: this.form.studentId, // 学号
+          student_name: this.form.name,    // 姓名
+          nickname: this.form.nickname,   // 昵称
+          gender: this.form.gender === "男" ? 1 : 2, // 性别转换
+          student_phone: this.form.phone, // 手机号
+          student_email: this.form.email, // 邮箱
+          college_id: collegeId,  // 学院 ID   这里还有问题，要查新的学院ID
+        };
+        await myAxios.put(`/api/studentPersonalCenter/studentPersonalInfo/${studentId}`, payload);
         alert("信息已保存");
       } catch (error) {
         console.error("保存失败", error);

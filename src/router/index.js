@@ -44,45 +44,45 @@ const routes = [
   },
   {
     path: '/studentPersonalCenter',
-    component: () => import('@/pages/studentPersonalCenter/Layout.vue'), // 父级布局组件
+    component: () => import('@/pages/student-personal-center/Layout.vue'), // 更新路径
     children: [
       {
         path: 'personalInfo',
         name: 'personalInfo',
-        component: () => import('@/pages/studentPersonalCenter/PersonalInfo.vue'), // 个人资料页面
+        component: () => import('@/pages/student-personal-center/components/PersonalInfo.vue'),
       },
       {
         path: 'affiliatedOrganizations',
         name: 'affiliatedOrganizations',
-        component: () => import('@/pages/studentPersonalCenter/AffiliatedOrganizations.vue'),//归属组织
+        component: () => import('@/pages/student-personal-center/components/AffiliatedOrganizations.vue'),
       },
       {
         path: 'myMessages',
         name: 'myMessages',
-        component: () => import('@/pages/studentPersonalCenter/MyMessages.vue'),//我的消息
+        component: () => import('@/pages/student-personal-center/components/MyMessages.vue'),
       },
       {
         path: 'activityRecords',
         name: 'activityRecords',
-        component: () => import('@/pages/studentPersonalCenter/ActivityRecords.vue'),//活动记录
+        component: () => import('@/pages/student-personal-center/components/ActivityRecords.vue'),
       },
       {
         path: 'publishActivity',
         name: 'publishActivity',
-        component: () => import('@/pages/studentPersonalCenter/PublishActivity.vue'),//发布活动
+        component: () => import('@/pages/student-personal-center/components/PublishActivity.vue'),
       },
       {
         path: 'activityAdmissions',
         name: 'activityAdmissions',
-        component: () => import('@/pages/studentPersonalCenter/ActivityAdmissions.vue'),//活动录取
+        component: () => import('@/pages/student-personal-center/components/ActivityAdmissions.vue'),
       },
       {
         path: 'securitySettings',
-        name: 'SecuritySettings',
-        component: () => import('@/pages/studentPersonalCenter/SecuritySettings.vue'), // 安全设置
+        name: 'securitySettings', 
+        component: () => import('@/pages/student-personal-center/components/SecuritySettings.vue'),
       },
     ],
-  },
+  }
 ]
 
 const router = createRouter({
