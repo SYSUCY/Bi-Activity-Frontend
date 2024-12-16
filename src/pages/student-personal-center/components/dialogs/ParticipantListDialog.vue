@@ -10,12 +10,12 @@
         <el-table-column prop="student_id" label="学号" width="120" />
         <el-table-column prop="college_name" label="学院" width="180" />
         <el-table-column prop="student_phone" label="联系电话" width="120" />
-        <el-table-column prop="status" label="状态" width="100">
-          <template #default="scope">
-            <el-tag :type="getStatusType(scope.row.status)">
-              {{ getStatusText(scope.row.status) }}
-            </el-tag>
-          </template>
+        <el-table-column prop="status" label="状态" width="110">
+        <template #default="scope">
+          <el-tag :type="getStatusType(scope.row.status)">
+            {{ getStatusText(scope.row.status) }}
+          </el-tag>
+        </template>
         </el-table-column>
         <el-table-column label="操作" width="120">
           <template #default="scope">
@@ -23,7 +23,7 @@
               type="primary" 
               size="small" 
               @click="handleUpdateStatus(scope.row)"
-              :disabled="scope.row.status === 3" 
+              :disabled="scope.row.status === 4" 
             >
               {{ getActionText(scope.row.status) }}
             </el-button>
@@ -67,14 +67,13 @@ const visible = computed({
 // 获取状态样式
 const getStatusType = (status) => {
   const statusMap = {
-    1: 'info',     // 待审核
-    2: 'success',  // 已录取
-    3: 'warning',  // 未录取
-    4: 'danger'    // 已取消报名
+    1: 'warning',  // 待审核 - 黄色
+    2: 'success',  // 已录取 - 绿色
+    3: 'danger',   // 未录取 - 红色
+    4: 'info'      // 已取消报名 - 灰色
   }
   return statusMap[status] || ''
 }
-
 // 获取状态文本
 const getStatusText = (status) => {
   const statusMap = {
@@ -89,10 +88,10 @@ const getStatusText = (status) => {
 // 获取操作按钮文本
 const getActionText = (status) => {
   const actionMap = {
-    1: '审核',
-    2: '取消录取',
-    3: '录取',
-    4: '重新审核'
+    1: '录取',     // 待审核状态可以录取
+    2: '取消录取', // 已录取状态可以改为未录取
+    3: '录取',     // 未录取状态可以重新录取
+    4: '不可操作'   // 已取消报名状态不能操作
   }
   return actionMap[status] || '操作'
 }
@@ -100,9 +99,12 @@ const getActionText = (status) => {
 // 更新参与者状态
 const handleUpdateStatus = async (participant) => {
   try {
+    console.log('当前活动ID:', props.activityId)  // 添加日志
     // 弹窗确认
+    const newStatus = participant.status === 2 ? 3 : 2  // 在已录取和未录取之间切换
+
     await ElMessageBox.confirm(
-      `确定要${participant.status === 4 ? '重新审核' : '录取'}该学生吗？`,
+      `确定要${participant.status === 2 ? '取消录取' : '录取'}该学生吗？`,
       '提示',
       {
         confirmButtonText: '确定',
@@ -115,13 +117,13 @@ const handleUpdateStatus = async (participant) => {
     const { data: res } = await myAxios.put(
       `/api/studentPersonalCenter/activityManage/participant/${participant.id}`,
       {
-        status: 3  // 设置为已录取状态
+        status: newStatus
       }
     )
 
     if (res.code === 0) {
-      ElMessage.success('操作成功')
-      emit('refresh')  // 通知父组件刷新数据
+      ElMessage.success(participant.status === 2 ? '已取消录取' : '已录取')
+      emit('refresh', props.activityId)
     } else {
       ElMessage.error(res.message || '操作失败')
     }

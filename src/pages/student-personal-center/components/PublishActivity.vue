@@ -120,10 +120,35 @@
         <el-input v-model="form.contact_details" placeholder="请输入联系人电话" />
       </el-form-item>
 
+      <!-- 活动图片上传 -->
+      <el-form-item label="活动图片" prop="activity_image">
+        <div class="image-upload">
+          <el-upload
+            class="image-uploader"
+            :show-file-list="false"
+            :http-request="customUpload"
+            accept=".jpg,.jpeg,.png"
+            :before-upload="beforeImageUpload"
+          >
+            <img 
+              v-if="form.imageUrl" 
+              :src="form.imageUrl" 
+              class="activity-image" 
+            />
+            <div v-else class="image-placeholder">
+              <el-icon class="image-uploader-icon"><Plus /></el-icon>
+              <span>点击上传活动图片</span>
+            </div>
+          </el-upload>
+          <div class="image-tip">文件大小不超过 2MB</div>
+        </div>
+      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" @click="handleSubmit">发布活动</el-button>
         <el-button @click="handleReset">重置</el-button>
       </el-form-item>
+      
     </el-form>
   </div>
 </template>
@@ -133,6 +158,7 @@ import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useStudentStore } from '@/stores/student'
 import myAxios from '@/request'
+import { Plus } from '@element-plus/icons-vue'
 
 const studentStore = useStudentStore()
 const formRef = ref(null)
@@ -156,6 +182,8 @@ const form = reactive({
   contact_details: '',
   activity_publisher_id: studentStore.data.id, // 设置发布者ID为当前登录学生ID
   activity_status: 1, // 1表示审核中状态
+  imageUrl: '',
+  activity_image_id: null,
 })
 
 // 表单验证规则
@@ -266,6 +294,51 @@ const validateDateTime = (rule, value, callback) => {
   
   callback()
 }
+
+// 文件上传前的验证
+const beforeImageUpload = (file) => {
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+  const isLt2M = file.size / 1024 / 1024 < 2
+
+  if (!isJpgOrPng) {
+    ElMessage.error('活动图片只能是 JPG 或 PNG 格式!')
+    return false
+  }
+  if (!isLt2M) {
+    ElMessage.error('图片大小不能超过 2MB!')
+    return false
+  }
+  return true
+}
+
+// 自定义上传方法
+const customUpload = async (options) => {
+  try {
+    const formData = new FormData()
+    formData.append('file', options.file)
+    
+    const { data: res } = await myAxios.post(
+      '/api/studentPersonalCenter/image/upload', 
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    )
+
+    if (res.code === 0) {
+      form.imageUrl = res.data.url
+      form.activity_image_id = res.data.id
+      ElMessage.success('图片上传成功')
+    } else {
+      ElMessage.error('上传失败')
+    }
+  } catch (error) {
+    console.error('上传错误:', error)
+    ElMessage.error('上传失败')
+  }
+}
 </script>
 
 <style scoped>
@@ -301,5 +374,57 @@ h1 {
 .el-date-picker,
 .el-time-picker {
   width: 100%;
+}
+
+.image-upload {
+  text-align: center;
+  max-width: 100%;
+}
+
+.image-uploader {
+  border: 1px dashed #d9d9d9;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 200px;
+  max-width: 400px;
+  margin: 0 auto;
+  width: 200px;  
+  height: 200px; 
+}
+
+.image-uploader:hover {
+  border-color: #409EFF;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #8c939d;
+}
+
+.image-uploader-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.activity-image {
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.image-tip {
+  font-size: 12px;
+  color: #909399;
+  margin-top: 8px;
 }
 </style>

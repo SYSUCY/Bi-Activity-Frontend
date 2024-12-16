@@ -2,7 +2,11 @@
   <div class="layout">
     <aside class="sidebar">
       <div class="user-info">
-        <img src="/images/avatar.jpg" alt="用户头像" class="avatar" />
+        <img 
+          :src="userInfo.avatarUrl || '/images/avatar.jpg'" 
+          alt="用户头像" 
+          class="avatar" 
+        />
         <p class="username">张三</p>
       </div>
       <ul>
@@ -17,16 +21,54 @@
       </ul>
     </aside>
     <main class="main-content">
-      <router-view /> <!-- 子页面内容显示在这里 -->
+     <router-view @avatar-updated="loadUserInfo" /> <!-- 子页面内容显示在这里 -->
     </main>
   </div>
 </template>
 
-<script>
-export default {
-  name: "PersonalCenterLayout",
-};
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useStudentStore } from '@/stores/student'
+import myAxios from '@/request'
+
+const studentStore = useStudentStore()
+const userInfo = ref({
+  avatarUrl: '',
+  name: ''
+})
+
+// 获取用户信息
+const loadUserInfo = async () => {
+  try {
+    // 获取学生基本信息
+    const { data: response } = await myAxios.get(
+      `/api/studentPersonalCenter/studentPersonalInfo/${studentStore.data.id}`
+    )
+    
+    if (response.code === 0) {
+      const studentData = response.data
+      userInfo.value.name = studentData.student_name
+
+      // 如果有头像ID，获取头像URL
+      if (studentData.student_avatar_id) {
+        const { data: imageRes } = await myAxios.get(
+          `/api/studentPersonalCenter/image/${studentData.student_avatar_id}`
+        )
+        if (imageRes.code === 0) {
+          userInfo.value.avatarUrl = imageRes.data.url
+        }
+      }
+    }
+  } catch (error) {
+    console.error('加载用户信息失败', error)
+  }
+}
+
+onMounted(() => {
+  loadUserInfo()
+})
 </script>
+
 
 <style scoped>
 .user-info {

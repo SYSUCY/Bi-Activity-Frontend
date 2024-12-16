@@ -8,6 +8,29 @@
       label-width="80px"
       class="info-form"
     >
+      <!-- 添加头像上传区域 -->
+      <el-form-item label="头像">
+        <div class="avatar-upload">
+          <el-upload
+            class="avatar-uploader"
+            :show-file-list="false"
+            :http-request="customUpload"
+            accept=".jpg,.jpeg,.png"
+            :before-upload="beforeAvatarUpload"
+          >
+            <img 
+              v-if="form.avatarUrl" 
+              :src="form.avatarUrl" 
+              class="avatar" 
+            />
+            <div v-else class="avatar-placeholder">
+              <el-icon class="avatar-uploader-icon"><Plus /></el-icon>
+              <span>点击上传</span>
+            </div>
+          </el-upload>
+        </div>
+      </el-form-item>
+
       <el-form-item label="学号" prop="studentId">
         <el-input v-model="form.studentId" placeholder="请输入学号" />
       </el-form-item>
@@ -56,6 +79,7 @@ import myAxios from "@/request"
 const formRef = ref(null)
 const studentStore = useStudentStore()
 const collegeId = ref(0)
+const emit = defineEmits(['avatar-updated'])
 
 // 表单数据
 const form = reactive({
@@ -101,6 +125,16 @@ const loadStudentInfo = async (studentId) => {
     })
 
     collegeId.value = studentData.college_id
+
+    // 添加头像加载逻辑
+    if (studentData.student_avatar_id) {
+      const { data: imageRes } = await myAxios.get(
+        `/api/studentPersonalCenter/image/${studentData.student_avatar_id}`
+      )
+      if (imageRes.code === 0) {
+        form.avatarUrl = imageRes.data.url
+      }
+    }
 
     // 获取学院信息
     if (studentData.college_id) {
@@ -166,6 +200,59 @@ onMounted(() => {
     ElMessage.error('用户 ID 未找到')
   }
 })
+
+// 添加更新头像的方法
+const handleUpdateAvatar = async (imageId) => {
+  try {
+    const { data: res } = await myAxios.put(
+      `/api/studentPersonalCenter/studentPersonalInfo/${studentStore.data.id}`,
+      {
+        student_avatar_id: imageId
+      }
+    )
+    if (res.code === 0) {
+      ElMessage.success('头像更新成功')
+      // 更新父组件（Layout）中的头像
+      emit('avatar-updated')
+    }
+  } catch (error) {
+    console.error('更新头像失败:', error)
+    ElMessage.error('头像更新失败')
+  }
+}
+
+// customUpload 方法，添加错误处理
+const customUpload = async (options) => {
+  try {
+    console.log('开始上传文件:', options.file)
+    
+    const formData = new FormData()
+    formData.append('file', options.file)
+    
+    console.log('发送请求...')
+    const { data: res } = await myAxios.post(
+      '/api/studentPersonalCenter/image/upload', 
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    )
+    console.log('上传响应:', res)
+
+    if (res.code === 0) {
+      form.avatarUrl = res.data.url
+      // 更新学生信息中的头像ID
+      await handleUpdateAvatar(res.data.id)
+    } else {
+      ElMessage.error('上传失败')
+    }
+  } catch (error) {
+    console.error('上传错误:', error)
+    ElMessage.error('上传失败: ' + error.message)
+  }
+}
 </script>
 
 <style scoped>
@@ -186,5 +273,48 @@ h1 {
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #8c939d;
+}
+
+
+.avatar-uploader {
+  border: 1px dashed #d9d9d9;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s;
+  width: 100px;  /* 增加宽度 */
+  height: 100px; /* 增加高度 */
+  margin: 0 auto;
+}
+
+.avatar-uploader:hover {
+  border-color: #409EFF;
+}
+
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 100px;    /* 对应容器宽度 */
+  height: 100px;   /* 对应容器高度 */
+  text-align: center;
+  line-height: 100px;
+}
+
+.avatar {
+  width: 100px;    /* 对应容器宽度 */
+  height: 100px;   /* 对应容器高度 */
+  display: block;
+  object-fit: cover;
 }
 </style>
