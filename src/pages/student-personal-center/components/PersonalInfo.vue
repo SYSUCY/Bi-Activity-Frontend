@@ -32,40 +32,64 @@
       </el-form-item>
 
       <el-form-item label="学号" prop="studentId">
-        <el-input v-model="form.studentId" placeholder="请输入学号" />
+        <el-input v-model="form.studentId" 
+          readonly
+          placeholder="请输入学号" 
+        />
       </el-form-item>
 
       <el-form-item label="姓名" prop="name">
-        <el-input v-model="form.name" placeholder="请输入姓名" />
+        <el-input v-model="form.name" 
+          readonly
+          placeholder="请输入姓名" 
+        />
       </el-form-item>
 
       <el-form-item label="昵称" prop="nickname">
-        <el-input v-model="form.nickname" placeholder="请输入昵称" />
+        <el-input v-model="form.nickname" 
+          readonly
+          placeholder="请输入昵称" 
+        />
       </el-form-item>
 
       <el-form-item label="性别" prop="gender">
-        <el-radio-group v-model="form.gender">
-          <el-radio :value="1">男</el-radio>
-          <el-radio :value="2">女</el-radio>
+        <el-radio-group v-model="form.gender" class="custom-readonly-radio">
+          <el-radio :value="1" disabled>男</el-radio>
+          <el-radio :value="2" disabled>女</el-radio>
         </el-radio-group>
       </el-form-item>
 
       <el-form-item label="手机" prop="phone">
-        <el-input v-model="form.phone" placeholder="请输入手机号" />
+        <el-input 
+          v-model="form.phone" 
+          readonly
+          placeholder="请输入手机号" 
+          
+        />
       </el-form-item>
 
       <el-form-item label="邮箱" prop="email">
-        <el-input v-model="form.email" placeholder="请输入邮箱" />
+        <el-input 
+          v-model="form.email" 
+          readonly
+          placeholder="未绑定邮箱" 
+          
+        />
       </el-form-item>
 
       <el-form-item label="学院" prop="college">
-        <el-input v-model="form.college" disabled placeholder="请输入学院" />
+        <el-input 
+          v-model="form.college" 
+          readonly
+          placeholder="未加入学院" 
+          
+        />
       </el-form-item>
 
-      <el-form-item>
+      <!-- <el-form-item>
         <el-button type="primary" @click="handleSubmit">保存</el-button>
         <el-button @click="handleReset">重置</el-button>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
   </div>
 </template>
@@ -187,9 +211,9 @@ const handleSubmit = async () => {
 
 // 重置表单
 const handleReset = () => {
-  if (studentStore.data.id) {
-    loadStudentInfo(studentStore.data.id)
-  }
+  form.studentId = ''
+  form.nickname = ''
+  form.name = ''
 }
 
 // 组件挂载时加载数据
@@ -317,4 +341,33 @@ h1 {
   display: block;
   object-fit: cover;
 }
+
+.custom-disabled-input :deep(.el-input__inner) {
+  background-color: #fff !important;  /* 浅灰色背景 */
+  color: #909399 !important;             /* 灰色文字 */
+  -webkit-text-fill-color: #909399 !important;
+  border-color: #e4e7ed !important;      /* 浅灰色边框 */
+  cursor: not-allowed;
+}
+
+.custom-readonly-radio :deep(.el-radio) {
+  cursor: not-allowed;
+}
+
+.custom-readonly-radio :deep(.el-radio__input.is-disabled + .el-radio__label) {
+  color: #606266 !important;  /* 正常文本颜色 */
+  cursor: not-allowed;
+}
+
+.custom-readonly-radio :deep(.el-radio__input.is-disabled.is-checked .el-radio__inner) {
+  background-color: #409eff !important;  /* 选中状态保持蓝色 */
+  border-color: #409eff !important;
+}
+
+.custom-readonly-radio :deep(.el-radio__input.is-disabled .el-radio__inner) {
+  background-color: #ffffff !important;  /* 未选中状态保持白色 */
+  border-color: #dcdfe6 !important;
+}
+
+
 </style>

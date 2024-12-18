@@ -64,7 +64,7 @@
         :rules="phoneDialog.rules" 
         ref="phoneFormRef"
         class="phone-form"
-        label-width="80px"  
+        label-width="100px"  
       >
         <el-form-item label="手机号" prop="phone">
           <el-input 
@@ -82,6 +82,21 @@
               </el-button>
             </template>
           </el-input>
+        </el-form-item>
+        <el-form-item label="图形验证码" prop="captcha" class="captcha-item">
+          <div class="captcha-container">
+            <el-input 
+              v-model="phoneDialog.form.captcha" 
+              class="captcha-input"
+              placeholder="请输入图形验证码"
+            />
+            <img 
+              :src="phoneDialog.captchaImage" 
+              class="captcha-img"
+              @click="refreshPhoneCaptcha"
+              alt="验证码"
+            />
+          </div>
         </el-form-item>
         <el-form-item label="验证码" prop="code">
           <el-input 
@@ -109,7 +124,7 @@
         :rules="emailDialog.rules" 
         ref="emailFormRef"
         class="email-form"
-        label-width="80px"  
+        label-width="100px"  
       >
         <el-form-item label="邮箱" prop="email">
           <el-input 
@@ -127,6 +142,21 @@
               </el-button>
             </template>
           </el-input>
+        </el-form-item>
+        <el-form-item label="图形验证码" prop="captcha" class="captcha-item">
+          <div class="captcha-container">
+            <el-input 
+              v-model="emailDialog.form.captcha" 
+              class="captcha-input"
+              placeholder="请输入图形验证码"
+            />
+            <img 
+              :src="emailDialog.captchaImage"
+              class="captcha-img"
+              @click="refreshEmailCaptcha"
+              alt="验证码"
+            />
+          </div>
         </el-form-item>
         <el-form-item label="验证码" prop="code">
           <el-input 
@@ -187,6 +217,9 @@ const passwordDialog = reactive({
 
 const showPasswordDialog = () => {
   passwordDialog.visible = true
+  passwordDialog.form.oldPassword = ''
+  passwordDialog.form.newPassword = ''
+  passwordDialog.form.confirmPassword = ''
 }
 
 const handleUpdatePassword = async () => {
@@ -212,6 +245,8 @@ const phoneDialog = reactive({
   visible: false,
   codeSending: false,
   countdown: 60,
+  captchaImage: '',
+  captchaId: '',
   form: {
     phone: '',
     code: '',
@@ -222,6 +257,7 @@ const phoneDialog = reactive({
       { pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确', trigger: 'blur' },
     ],
     code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+    captcha: [{ required: true, message: '请输入图形验证码', trigger: 'blur' }],
   },
 })
 
@@ -229,9 +265,12 @@ const emailDialog = reactive({
   visible: false,
   codeSending: false,
   countdown: 60,
+  captchaImage: '',
+  captchaId: '',
   form: {
     email: '',
     code: '',
+    captcha: '', 
   },
   rules: {
     email: [
@@ -239,15 +278,46 @@ const emailDialog = reactive({
       { type: 'email', message: '邮箱格式不正确', trigger: 'blur' },
     ],
     code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+    captcha: [{ required: true, message: '请输入图形验证码', trigger: 'blur' }],
   },
 })
 
 const showPhoneDialog = () => {
   phoneDialog.visible = true
+  refreshPhoneCaptcha()
 }
 
 const showEmailDialog = () => {
   emailDialog.visible = true
+  refreshEmailCaptcha()
+}
+
+// 手机验证的刷新验证码方法
+const refreshPhoneCaptcha = async () => {
+  try {
+    const { data: res } = await myAxios.get('/api/studentPersonalCenter/securitySettings/captcha')
+    if (res.code === 0) {
+      phoneDialog.captchaImage = res.data.captcha_image
+      phoneDialog.captchaId = res.data.captcha_id
+      phoneDialog.form.captcha = ''
+    }
+  } catch (error) {
+    ElMessage.error('获取验证码失败')
+  }
+}
+
+const refreshEmailCaptcha = async () => {
+  try {
+    const { data: res } = await myAxios.get('/api/studentPersonalCenter/securitySettings/captcha')
+    if (res.code === 0) {
+      emailDialog.captchaImage = res.data.captcha_image
+      emailDialog.captchaId = res.data.captcha_id
+      emailDialog.form.captcha = ''
+    }
+  } catch (error) {
+    console.error('获取验证码失败:', error)
+    ElMessage.error('获取验证码失败')
+  }
 }
 
 const handleSendPhoneCode = async () => {
@@ -257,6 +327,18 @@ const handleSendPhoneCode = async () => {
       ElMessage.warning('请输入正确的手机号格式')
       return
     }
+
+    // 验证图形验证码
+    if (!phoneDialog.form.captcha) {
+      ElMessage.warning('请输入图形验证码')
+      return
+    }
+
+    // 先验证图形验证码
+    await myAxios.post('/api/studentPersonalCenter/securitySettings/captcha/verify', {
+      captcha_id: phoneDialog.captchaId,
+      captcha_code: phoneDialog.form.captcha
+    })
 
     phoneDialog.codeSending = true
     phoneDialog.countdown = 60
@@ -325,6 +407,18 @@ const handleSendEmailCode = async () => {
       ElMessage.warning('请输入正确的邮箱格式')
       return
     }
+
+    // 验证图形验证码
+    if (!emailDialog.form.captcha) {
+      ElMessage.warning('请输入图形验证码')
+      return
+    }
+
+    // 先验证图形验证码
+    await myAxios.post('/api/studentPersonalCenter/securitySettings/captcha/verify', {
+      captcha_id: emailDialog.captchaId,
+      captcha_code: emailDialog.form.captcha
+    })
 
     emailDialog.codeSending = true
     emailDialog.countdown = 60
@@ -436,5 +530,23 @@ onMounted(() => {
 :deep(.el-dialog__footer) {
   padding: 10px 20px 20px;
   border-top: 1px solid #f0f0f0;
+}
+
+.captcha-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;  
+}
+
+.captcha-input {
+  flex: 1;    /* 让输入框占据剩余空间 */
+  max-width: 150px;  
+}
+
+.captcha-img {
+  height: 32px;  /* 和输入框高度保持一致 */
+  border: 1px solid #dcdfe6;  
+  border-radius: 4px;  
+  cursor: pointer;  
 }
 </style>
