@@ -6,10 +6,33 @@
       mode="horizontal"
       @select="handleSelect"
     >
-      <el-menu-item index="/" class="el-menu-item">首页</el-menu-item>
-      <el-menu-item index="/activityQuery" class="el-menu-item">活动查询</el-menu-item>
-      <el-menu-item index="/myActivity" class="el-menu-item">我的活动</el-menu-item>
-      <el-menu-item index="/helpCenter" class="el-menu-item">帮助中心</el-menu-item>
+      <el-menu-item index="/" class="el-menu-item">
+        <el-icon style="margin-left: 4px" :size="20">
+          <House />
+        </el-icon>
+        首页
+      </el-menu-item>
+      <el-menu-item index="/activityQuery" class="el-menu-item">
+        <el-icon style="margin-left: 4px" :size="20">
+          <Search />
+        </el-icon>
+        活动查询
+      </el-menu-item>
+      <el-menu-item index="/myActivity" class="el-menu-item">
+        <el-icon style="margin-left: 4px" :size="20">
+          <Promotion />
+        </el-icon>
+        我的活动
+      </el-menu-item>
+      <el-menu-item index="/helpCenter" class="el-menu-item">
+        <el-icon style="margin-left: 4px" :size="20">
+          <Help />
+        </el-icon>
+        帮助中心
+      </el-menu-item>
+      <el-menu-item index="/Test" class="el-menu-item">
+        Test
+      </el-menu-item>
     </el-menu>
     <div class="user-actions">
       <el-button type="primary" @click="navigateTo('/login')">登录</el-button>
@@ -21,6 +44,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import {Help, House, Promotion} from "@element-plus/icons-vue";
 
 const activeIndex = ref('/')
 const router = useRouter()

@@ -2,9 +2,34 @@ import {createRouter, createWebHistory} from 'vue-router'
 
 const routes = [
   {
+    path: '/Test',
+    name: 'Test',
+    component: () => import('@/pages/home/TestPage.vue')
+  },
+  {
     path: '/',
     name: 'Home',
-    component: () => import('@/pages/HomePage.vue')
+    component: () => import('@/pages/home/HomePage.vue')
+  },
+  // TODO: 搜索页面
+  {
+    path: '/activityQuery',
+    name: 'ActivityQuery',
+    component: () => import('@/pages/home/ActivityQueryPage.vue')
+  },
+    // TODO: 我的活动页面
+  {
+    path: '/myActivity',
+    name: 'MyActivity',
+    component: () => import('@/pages/home/MyActivityPage.vue')
+  },
+    // TODO: 活动详情页面
+    // TODO: 活动报名页面
+    // TODO: 帮助页面
+  {
+    path: '/helpCenter',
+    name: 'HelpCenter',
+    component: () => import('@/pages/home/HelpCenterPage.vue')
   },
   {
     path: "/login", 
