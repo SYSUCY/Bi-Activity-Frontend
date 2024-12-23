@@ -8,7 +8,7 @@
               <span>活动分类</span>
             </el-col>
             <el-col :span="12" style="text-align: right;">
-              <el-icon style="margin-right: 4px" :size="20">
+              <el-icon style="margin-right: 4px" :size="20" @click="clickTypeCard">
                 <MoreFilled />
               </el-icon>
             </el-col>
@@ -16,8 +16,11 @@
         </div>
       </template>
       <el-row :gutter="20">
-        <el-col v-for="(item, index) in typeList" :key="item.id" :span="4"><div class="grid-content ep-bg-purple" />
-          <el-card shadow="always" style="background-color: #feb47b">
+        <el-col
+            v-for="(item) in typeList" :key="item.id"
+            :span="4"
+        ><div class="grid-content ep-bg-purple" />
+          <el-card shadow="always" style="background-color: #feb47b" @click="clickTypeCard">
             <el-image :src="item.url" fit="cover" style="width: 100%; height: 100%;" />
             <div class="type">{{ item.typeName }}</div>
           </el-card>
@@ -31,6 +34,7 @@
 import {onMounted, ref} from "vue";
 import {getActivityTypeList} from "@/api/home/home.js";
 import {MoreFilled} from "@element-plus/icons-vue";
+import router from "@/router/index.js";
 
 // TODO: type图片展示
 const typeList = ref([]);
@@ -49,6 +53,10 @@ onMounted(async () => {
     console.error("Panic to fetch activity type list:", error);
   }
 });
+
+const clickTypeCard = () => {
+  router.push({name: 'ActivityQuery'})
+}
 </script>
 
 <style>

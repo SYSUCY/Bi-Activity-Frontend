@@ -9,7 +9,8 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/pages/home/HomePage.vue')
+    component: () => import('@/pages/home/HomePage.vue'),
+
   },
   // TODO: 搜索页面
   {

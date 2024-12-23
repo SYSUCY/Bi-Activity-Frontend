@@ -8,7 +8,7 @@
               <span>热门活动</span>
             </el-col>
             <el-col :span="12" style="text-align: right;">
-              <el-icon style="margin-right: 4px" :size="20">
+              <el-icon style="margin-right: 4px" :size="20" @click="gotoActivityQuery">
                 <More />
               </el-icon>
             </el-col>
@@ -58,6 +58,11 @@
 import {onMounted, ref} from "vue";
 import {getPopularActivityList} from "@/api/home/home.js";
 import {More} from "@element-plus/icons-vue";
+import router from "@/router/index.js";
+
+const gotoActivityQuery = () => {
+  router.push({name: 'ActivityQuery'})
+}
 
 const activityList = ref([]);
 onMounted(async() => {

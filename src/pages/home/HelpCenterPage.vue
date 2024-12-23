@@ -4,7 +4,7 @@
       <el-col :span="5"></el-col>
       <el-col :span="2" :xs="24">
         <el-menu
-            default-active="2"
+            default-active="1"
             class="el-menu-vertical-demo"
             @open="handleOpen"
             @close="handleClose"
@@ -34,7 +34,7 @@
               <span>联系我们</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="5">
+          <el-menu-item index="5" disabled>
             <template #title>
               <el-icon><More /></el-icon>
               <span>有待开发</span>
@@ -80,6 +80,12 @@ const handleClose = (key, keyPath) => {
 
 const keyword = ref('')
 const keywordChange = () => {
-  console.log(keyword.value)
+  // TODO：发送后端关键词检索
 }
 </script>
+
+<style scoped>
+#help-center-page {
+  margin-bottom: 50px;
+}
+</style>

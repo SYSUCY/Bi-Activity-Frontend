@@ -10,9 +10,9 @@
           </el-row>
           <el-row style="padding-top: 10px;">
             <el-col :span="4">
-              <el-image style="width: 70px; height: 50px" :src="activity.activityTypeImageUrl" fit="scale-down" />
+              <el-image style="width: 100%; height: 50px" :src="activity.activityTypeImageUrl" fit="scale-down" />
             </el-col>
-            <el-col :span="20" style="text-align: left; display: flex; align-items: flex-end; padding-left: 20px;">
+            <el-col :span="20" style="text-align: left; display: flex; align-items: flex-end; padding-left: 10px;">
               <el-text size="large">
                 {{ activity.activityTypeName }}
               </el-text>
@@ -41,23 +41,26 @@
           <el-row style="padding-top: 10px">
             <el-divider content-position="left">Join In</el-divider>
           </el-row>
-          <el-row style="padding-top: 10px;">
+          <el-row style="padding-top: 10px;" v-if="rTime">
             <el-col :span="24" style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
               <el-row style="display: flex; justify-content: center;">
                 <el-tag
                     effect="dark"
                     type="danger"
-                    size="large"      style="min-width: 70px; height: 40px; display: flex; align-items: center; justify-content: center;"
+                    size="large"
+                    style="min-width: 70px; height: 40px; display: flex; align-items: center; justify-content: center;"
                 >
                   {{ rTime }}
                 </el-tag>
-                <el-text v-show="rTime" style="text-align: left; padding-left: 4px; align-self: flex-end;" size="large">
+                <el-text
+                    style="text-align: left; padding-left: 4px; align-self: flex-end;"
+                    size="large">
                   天
                 </el-text>
               </el-row>
-              <el-row v-show="rTime" style="margin-top: 5px; margin-left: -10px;">
+              <el-row style="margin-top: 5px; margin-left: -10px;">
                 <el-text size="large">
-                  活动截止报名剩余 {{ 2 }} 天
+                  活动截止报名剩余 {{ rTime }} 天
                 </el-text>
               </el-row>
               <el-row style="padding-top: 50px; display: flex; justify-content: center;">
@@ -66,7 +69,7 @@
                     type="danger"
                     size="large"      style="width: 70px; height: 40px; display: flex; align-items: center; justify-content: center;"
                 >
-                  {{ 0 }}
+                  {{ activity.recruitedNumber }}
                 </el-tag>
                 <el-text style="text-align: left; padding-left: 4px; align-self: flex-end;" size="large">
                   人
@@ -74,15 +77,20 @@
               </el-row>
               <el-row style="margin-top: 5px; margin-left: -10px;">
                 <el-text size="large">
-                  报名人数{{ 0 }}人（满额 {{ 2 }} 人）
+                  报名人数{{ activity.recruitedNumber }}人（满额 {{ activity.recruitmentNumber }} 人）
                 </el-text>
               </el-row>
               <el-row style="padding-top: 25px; margin-left: -20px;">
-                <el-button type="danger" plain size="large" @click="participants()">
-                  <el-text v-if="1" size="large">
+                <el-button
+                    type="danger"
+                    plain size="large"
+                    @click="participants()"
+                    :disabled="rTime === 0 || activity.participateStatus !== 1"
+                >
+                  <el-text v-if="activity.participateStatus === 1" size="large">
                     我要报名
                   </el-text>
-                  <el-text v-else-if="2" size="large">
+                  <el-text v-else-if="activity.participateStatus === 2" size="large">
                     等待审核
                   </el-text>
                   <el-text v-else size="large">
@@ -93,17 +101,180 @@
               <el-row style="padding-top: 10px;"></el-row>
             </el-col>
           </el-row>
-        </el-card>
+          <el-row v-else>
+            <el-col
+                style="display: flex; justify-content: center; padding-top: 20px; padding-bottom: 20px;"
+            >
+              <el-tag
+                  effect="dark"
+                  type="danger"
+                  size="large"
+                  style="min-width: 70px; height: 50px; display: flex; align-items: center; justify-content: center;"
+              >
+                <el-text size="large">
+                  活动已结束
+                </el-text>
+              </el-tag>
+            </el-col>
+          </el-row>
+        </el-card >
       </el-col>
       <el-col :span="16" class="contain-col" :xs="24">
         <el-card style="width: 100%;">
-          <template #header>
-            <div class="card-header">
-              <span>Card name</span>
+          <el-col>
+            <div>
+              <el-row class="card2-title">
+                活动信息
+              </el-row>
+              <el-row class="details-title-row">
+                <el-col :span="5" class="details-title-col1">
+                  <el-text size="large">
+                    活动地点
+                  </el-text>
+                </el-col>
+                <el-col :span="18" class="details-title-col12">
+                  <el-text size="large" class="details-text">
+                    {{ activity.activityAddress }}
+                  </el-text>
+                </el-col>
+              </el-row>
+              <el-row class="details-title-row">
+                <el-col :span="5" class="details-title-col1">
+                  <el-text size="large">
+                    联系方式
+                  </el-text>
+                </el-col>
+                <el-col :span="18" class="details-title-col12">
+                  <el-text size="large" class="details-text">
+                    {{ activity.contactName }} {{ activity.contactDetails }}
+                  </el-text>
+                </el-col>
+              </el-row>
+              <el-row class="details-title-row">
+                <el-col :span="5" class="details-title-col1">
+                  <el-text size="large">
+                    活动分类
+                  </el-text>
+                </el-col>
+                <el-col :span="18" class="details-title-col12">
+                  <el-text size="large" class="details-text">
+                    {{ activity.activityTypeName }}
+                  </el-text>
+                </el-col>
+              </el-row>
             </div>
-          </template>
-          <p v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</p>
-          <template #footer>Footer content</template>
+            <div class="card2-padding">
+              <el-row class="card2-title">
+                志愿者招募信息
+              </el-row>
+              <el-row class="details-title-row">
+                <el-col :span="5" class="details-title-col1">
+                  <el-text size="large">
+                    时间段
+                  </el-text>
+                </el-col>
+                <el-col :span="18" class="details-title-col12">
+                  <el-text size="large" class="details-text">
+                    {{ activity.activityDate }} {{ activity.startTime }}-{{ activity.endTime }}
+                  </el-text>
+                </el-col>
+              </el-row>
+              <el-row class="details-title-row">
+                <el-col :span="5" class="details-title-col1">
+                  <el-text size="large">
+                    招募岗位
+                  </el-text>
+                </el-col>
+                <el-col :span="18" class="details-title-col12">
+                  <el-text size="large" class="details-text">
+                    志愿者
+                  </el-text>
+                </el-col>
+              </el-row>
+              <el-row class="details-title-row">
+                <el-col :span="5" class="details-title-col1">
+                  <el-text size="large">
+                    招募人数
+                  </el-text>
+                </el-col>
+                <el-col :span="18" class="details-title-col12">
+                  <el-text size="large" class="details-text">
+                    {{ activity.recruitedNumber }}/{{ activity.recruitmentNumber }} 人
+                  </el-text>
+                </el-col>
+              </el-row>
+            </div>
+            <div class="card2-padding">
+              <el-row class="card2-title">
+                报名须知
+              </el-row>
+              <el-row class="details-title-row">
+                <el-col :span="5" class="details-title-col1">
+                  <el-text size="large">
+                    报名限制
+                  </el-text>
+                </el-col>
+                <el-col :span="18" class="details-title-col12">
+                  <el-text size="large" class="details-text">
+                    {{ activity.registrationRestrictions }}
+                  </el-text>
+                </el-col>
+              </el-row>
+              <el-row class="details-title-row">
+                <el-col :span="5" class="details-title-col1">
+                  <el-text size="large">
+                    截止时间
+                  </el-text>
+                </el-col>
+                <el-col :span="18" class="details-title-col12">
+                  <el-text size="large" class="details-text">
+                    {{ activity.registrationDeadline }}
+                  </el-text>
+                </el-col>
+              </el-row>
+              <el-row class="details-title-row">
+                <el-col :span="5" class="details-title-col1">
+                  <el-text size="large">
+                    报名要求
+                  </el-text>
+                </el-col>
+                <el-col :span="18" class="details-title-col12">
+                  <el-text size="large" class="details-text">
+                    {{ activity.registrationRequirement }}
+                  </el-text>
+                </el-col>
+              </el-row>
+            </div>
+            <div class="card2-padding" style="padding-bottom: 20px;">
+              <el-row class="card2-title">
+                活动介绍
+              </el-row>
+              <el-row class="details-title-row">
+                <el-col :span="5" class="details-title-col1">
+                  <el-text size="large">
+                    活动简介
+                  </el-text>
+                </el-col>
+                <el-col :span="18" class="details-title-col12">
+                  <el-text size="large" class="details-text">
+                    {{ activity.activityIntroduction }}
+                  </el-text>
+                </el-col>
+              </el-row>
+              <el-row class="details-title-row">
+                <el-col :span="5" class="details-title-col1">
+                  <el-text size="large">
+                    活动内容
+                  </el-text>
+                </el-col>
+                <el-col :span="18" class="details-title-col12">
+                  <el-text size="large" class="details-text">
+                    {{ activity.activityContent }}
+                  </el-text>
+                </el-col>
+              </el-row>
+            </div>
+          </el-col>
         </el-card>
       </el-col>
     </el-row>
@@ -112,7 +283,7 @@
 
 <script setup>
 
-import {computed, ref} from "vue";
+import {computed} from "vue";
 import {remainingTime} from "@/utils/parseTime.js";
 
 const participants = () => {
@@ -137,14 +308,15 @@ const props = defineProps({
       recruitedNumber: 20,
       registrationRestrictions: "无",
       registrationRequirement: "无",
-      registrationDeadline: "2024-12-21 18:00",
+      registrationDeadline: "2024-12-23 18:00",
       activityIntroduction: "无",
       activityContent: "无",
       activityName: "没有活动名字",
       activityImageUrl: "url2",
       publisherName: "没有发布人",
       createdAt: "1999-12-31 23:59:59",
-      ParticipateStatus: 0,
+      activityStatus: 1,
+      participateStatus: 1,
     })
   }
 });
@@ -160,6 +332,8 @@ const rTime = computed(() => {
   display: flex;
   justify-content: center;
   height: 100vh; /* 使容器占满整个视口高度 */
+  //overflow: hidden;
+  margin-bottom: 50px;
 }
 
 .centered-row {
@@ -167,6 +341,26 @@ const rTime = computed(() => {
 }
 
 .contain-col {
+}
+
+.card2-title {
+  font-size: 20px;
+}
+
+.card2-padding {
+  padding-top: 30px;
+}
+
+.details-title-row {
+  padding-top: 10px;
+}
+
+.details-title-col1 {
+
+}
+
+.details-text {
+  font-weight: bold;
 }
 </style>
 
