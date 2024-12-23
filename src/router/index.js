@@ -25,6 +25,11 @@ const routes = [
     component: () => import('@/pages/home/MyActivityPage.vue')
   },
     // TODO: 活动详情页面
+  {
+    path: '/activityDetail/:id',
+    name: 'ActivityDetail',
+    component: () => import('@/pages/home/ActivityDetailPage.vue')
+  },
     // TODO: 活动报名页面
     // TODO: 帮助页面
   {

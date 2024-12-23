@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import ActivityDetails from "@/components/home/ActivityDetails.vue";
+import ActivityDetails from "@/pages/home/ActivityDetailPage.vue";
 
 </script>
 

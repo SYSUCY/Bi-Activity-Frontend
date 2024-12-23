@@ -37,6 +37,10 @@ export function parseTime(time, cFormat) {
 }
 
 export function remainingTime(time) {
+    if (arguments.length === 0) {
+        return null
+    }
+
     const now = new Date();
     const targetTime = new Date(time);
 

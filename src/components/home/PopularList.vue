@@ -19,8 +19,12 @@
         <el-row>
           <el-col v-for="item in activityList" :key="item.id"
                   style="padding-left: 10px; padding-right: 10px;"
-                  :span="8"><div class="grid-content ep-bg-purple" />
-            <el-card style="max-width: 100%; background: linear-gradient(to bottom, #8ab8e7, #3c96f2);">
+                  :span="8"><div class="grid-content ep-bg-purple"
+          />
+            <el-card
+                style="max-width: 100%; background: linear-gradient(to bottom, #8ab8e7, #3c96f2);"
+                @click="clickActivityCard(item.id)"
+            >
               <template #header>
                 <div class="card-header" style="text-align: center;">
                   {{ item.activityName }}
@@ -29,6 +33,9 @@
               <el-row :gutter="20">
                 <el-col :span="6" :xs="24">
                   <el-image style="width: 50px; height: 50px" :src="item.activityTypeImageUrl" fit="fill" />
+                  <el-text size="large">
+                    {{ item.activityTypeName }}
+                  </el-text>
                 </el-col>
                 <el-col :span="18" :xs="24"
                         style="text-align: left; display: flex; flex-direction: column; justify-content: center">
@@ -62,6 +69,10 @@ import router from "@/router/index.js";
 
 const gotoActivityQuery = () => {
   router.push({name: 'ActivityQuery'})
+}
+
+const clickActivityCard = (id) => {
+  router.push({name: 'ActivityDetail', params: {id: id}})
 }
 
 const activityList = ref([]);

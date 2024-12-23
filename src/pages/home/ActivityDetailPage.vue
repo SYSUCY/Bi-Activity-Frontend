@@ -63,7 +63,7 @@
                   活动截止报名剩余 {{ rTime }} 天
                 </el-text>
               </el-row>
-              <el-row style="padding-top: 50px; display: flex; justify-content: center;">
+              <el-row style="padding-top: 40px; display: flex; justify-content: center;">
                 <el-tag
                     effect="dark"
                     type="danger"
@@ -85,15 +85,15 @@
                     type="danger"
                     plain size="large"
                     @click="participants()"
-                    :disabled="rTime === 0 || activity.participateStatus !== 1"
+                    :disabled="rTime === 0 || activity.participateStatus !== 0"
                 >
-                  <el-text v-if="activity.participateStatus === 1" size="large">
+                  <el-text v-if="activity.participateStatus === 0" size="large">
                     我要报名
                   </el-text>
-                  <el-text v-else-if="activity.participateStatus === 2" size="large">
+                  <el-text v-if="activity.participateStatus === 1" size="large">
                     等待审核
                   </el-text>
-                  <el-text v-else size="large">
+                  <el-text v-else-if="activity.participateStatus === 2" size="large">
                     已报名
                   </el-text>
                 </el-button>
@@ -283,48 +283,37 @@
 
 <script setup>
 
-import {computed} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {remainingTime} from "@/utils/parseTime.js";
+import {useRoute} from "vue-router";
+import {getActivityDetail} from "@/api/home/search.js";
+
+const route = useRoute()
+const ID = computed(() => {
+  return route.params.id;
+})
+const activity = ref({})
+
+onMounted(async () => {
+  try {
+    const res = await getActivityDetail({activity_id: ID.value})
+    if (res.data.label === 200) {
+      activity.value = res.data.data
+    } else {
+      alert("获取活动详情失败")
+    }
+  } catch (e) {
+    alert("获取活动详情失败")
+  }
+})
+
+const rTime = computed(() => {
+  return remainingTime(new Date(activity.value.registrationDeadline))
+})
 
 const participants = () => {
   console.log(1)
 }
-
-const props = defineProps({
-  activity: {
-    type: Object,
-    required: true,
-    default: () => ({
-      id: 0,
-      activityAddress: "马六甲海峡",
-      contactName: "yz",
-      contactDetails: "123456789123",
-      activityTypeName: "自由活动",
-      activityTypeImageUrl: "url1",
-      activityDate: "2050-10-01",
-      startTime: "08:00",
-      endTime: "23:59",
-      recruitmentNumber: 100,
-      recruitedNumber: 20,
-      registrationRestrictions: "无",
-      registrationRequirement: "无",
-      registrationDeadline: "2024-12-23 18:00",
-      activityIntroduction: "无",
-      activityContent: "无",
-      activityName: "没有活动名字",
-      activityImageUrl: "url2",
-      publisherName: "没有发布人",
-      createdAt: "1999-12-31 23:59:59",
-      activityStatus: 1,
-      participateStatus: 1,
-    })
-  }
-});
-
-const rTime = computed(() => {
-  return remainingTime(new Date(props.activity.registrationDeadline))
-})
-
 </script>
 
 <style scoped>

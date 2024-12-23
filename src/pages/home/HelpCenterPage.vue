@@ -1,13 +1,12 @@
 <template>
   <div id="help-center-page">
     <el-row class="tac" style="display: flex; height: 80vh;">
-      <el-col :span="5"></el-col>
+      <el-col :span="6"></el-col>
       <el-col :span="2" :xs="24">
         <el-menu
             default-active="1"
             class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @close="handleClose"
+            @select="handleSelect"
             style="height: 100%;"
         >
           <el-menu-item index="1">
@@ -43,19 +42,10 @@
         </el-menu>
       </el-col>
       <el-col :span="12"
-              style="padding-left: 10px; display: flex; flex-direction: column; justify-content: flex-start; flex-grow: 1;" :xs="12">
-        <el-card class="box-card" style="flex-grow: 1; height: 100%;">
-          <el-row :span="24">
-            <el-col :span="18" style="display: flex; justify-content: left; align-content: center;">
-              <el-input
-                  v-model="keyword"
-                  style="width: 100%; height: 50px;"
-                  placeholder="问题检索"
-                  :prefix-icon="Search"
-                  @change="keywordChange"
-              />
-            </el-col>
-          </el-row>
+              style="padding-left: 10px; display: flex; flex-direction: column; justify-content: flex-start; flex-grow: 1; width: 100%;"
+              :xs="12">
+        <el-card class="box-card" style="flex-grow: 1; height: 80vh;">
+          <component :is="currentComponent" />
         </el-card>
       </el-col>
     </el-row>
@@ -67,20 +57,28 @@ import {
   Document,
   Menu as IconMenu,
   Location,
-  Setting, Search, More,
+  Setting, More,
 } from '@element-plus/icons-vue'
-import {ref} from "vue";
+import {shallowRef} from "vue";
+import problem from "@/components/Problem.vue";
 
-const handleOpen = (key, keyPath) => {
-  console.log(key, keyPath)
-}
-const handleClose = (key, keyPath) => {
-  console.log(key, keyPath)
-}
+const currentComponent = shallowRef(problem);
 
-const keyword = ref('')
-const keywordChange = () => {
-  // TODO：发送后端关键词检索
+const handleSelect = (index) => {
+  switch (index) {
+    case "1":
+      currentComponent.value = problem;
+      break;
+    case "2":
+      currentComponent.value = null;
+      break;
+    case "3":
+      currentComponent.value = null;
+      break;
+    case "4":
+      currentComponent.value = null;
+      break;
+  }
 }
 </script>
 
