@@ -1,6 +1,6 @@
 <template>
-  <div id="homePage">
-    
+  <div>
+    活动查询
   </div>
 </template>
 
@@ -8,6 +8,6 @@
 
 </script>
 
-<style scoped>
+<style>
 
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <router-view/>
+  <div id="registerPage">
+    <router-view />
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
   <div id="basicLayout">
     <el-container>
-      <el-header>
+      <el-header class="header">
         <GlobalHeader/>
       </el-header>
       <el-main class="content">
@@ -38,9 +38,9 @@
   padding: 20px;
 }
 
-#basicLayout .header {
+#basicLayout .register-header {
   padding-inline: 20px;
-  margin-bottom: 16px;
+  //margin-bottom: 16px;
   color: unset;
   background: white;
 }
