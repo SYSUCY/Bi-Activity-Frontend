@@ -10,6 +10,8 @@
       <el-menu-item index="/activityQuery">活动查询</el-menu-item>
       <el-menu-item index="/myActivity">我的活动</el-menu-item>
       <el-menu-item index="/helpCenter">帮助中心</el-menu-item>
+      <!-- 测试 -->
+      <el-menu-item index="/collegePersonalCenter">学院个人中心</el-menu-item>
     </el-menu>
     <div class="user-actions">
       <el-button type="primary" @click="navigateTo('/login')">登录</el-button>
