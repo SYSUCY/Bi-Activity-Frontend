@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useLoginStore } from "@/stores/login.js";
 
 const myAxios = axios.create({
   baseURL: "http://localhost:8080",
@@ -7,7 +8,13 @@ const myAxios = axios.create({
 });
 
 myAxios.interceptors.request.use(config => {
-  // 请求发送之前
+  // 从状态管理中获取token
+  const loginStore = useLoginStore()
+  const token = loginStore.data.token
+  // 如果有token，则在请求头中添加token
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
   return config
 }, error => {
   // 处理请求错误

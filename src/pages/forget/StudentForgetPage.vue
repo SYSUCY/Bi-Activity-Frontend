@@ -1,21 +1,21 @@
 <template> 
-  <div id="studentRegisterPage">
+  <div id="studentForgetPage">
     <el-container>
       <el-header class="register-header">
-        <h2>学生注册</h2>
-        <el-link target="_blank" @click="navigateTo('/login')">已有账号？点击登录</el-link>
+        <h2>修改密码</h2>
+        <el-link target="_blank" @click="navigateTo('/login')">想起来了！！！点击登录</el-link>
       </el-header>
       <el-main>
         <el-card>
           <el-form :model="form" ref="formRef" label-width="120px">
-            <h3>基本信息</h3>
+            <h3>邮箱找回</h3>
             <!-- 邮箱 -->
             <el-form-item label="邮箱" prop="email" :rules="rules.email">
               <el-input v-model="form.email" placeholder="请输入邮箱" />
             </el-form-item>
 
             <!-- 密码 -->
-            <el-form-item label="密码" prop="password" :rules="rules.password" >
+            <el-form-item label="新密码" prop="password" :rules="rules.password" >
               <el-input v-model="form.password" type="password" placeholder="请输入密码" show-password/>
             </el-form-item>
 
@@ -36,7 +36,7 @@
             </el-form-item>
             <!-- 提交按钮 -->
             <el-form-item>
-              <el-button type="primary" @click="submitForm">注册</el-button>      
+              <el-button type="primary" @click="submitForm">确认修改</el-button>      
             </el-form-item>
           </el-form>
         </el-card>
@@ -60,7 +60,7 @@ const form = reactive({
   email: '',
   password: '',
   confirmPassword: '',
-  emailCode: ''
+  emailCode: '',
 });
 
 const formRef = ref(null);
@@ -129,11 +129,17 @@ const handleSendEmailCode = async () => {
 const submitForm = () => {
   formRef.value.validate((valid) => {
     if (valid) {
-      myAxios.post('/register/student', form).then(() => {
-        ElMessage.success('注册成功，请登录');
+      myAxios.post('/forget/student', JSON.stringify({
+        "username": form.email,
+        "password": form.password,
+        "confirmPassword": form.confirmPassword,
+        "captchaCode": form.emailCode,
+        "type": "1"
+      })).then(() => {
+        ElMessage.success('密码修改成功，请登录');
         navigateTo('/login');
       }).catch((error) => {
-        ElMessage.error(error.response?.data?.message || '注册失败');
+        ElMessage.error(error.response?.data?.error || '修改密码失败');
       });
     } else {
       ElMessage.warning('请完整填写表单');

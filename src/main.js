@@ -10,11 +10,30 @@ import zhCn from 'element-plus/dist/locale/zh-cn.mjs' //导入 ElementPlus 组�
 //Pinia
 import { createPinia } from 'pinia' //导入Pinia的createPinia方法,用于创建Pinia实例(状态管理库)
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import { useLoginStore } from "@/stores/login"; // 引入状态管理
 
 const app = createApp(App)
 
 //将 Vue Router 插件注册到 Vue 应用中
 app.use(router) 
+
+// 全局前置守卫，检查目标页面是否需要登录验证
+router.beforeEach((to, from, next) => {
+  const loginStore = useLoginStore();
+  const token = loginStore.data.token;
+  // 如果目标页面需要登录验证
+  if (to.meta.requiresAuth) {
+    // 如果没有 token（未登录），跳转到登录页面
+    if (!token) { 
+      alert("当前界面需要登录方可访问");
+      next("/login");
+    } else {
+      next(); // 继续访问目标页面
+    }
+  } else {
+    next(); // 公共页面不需要验证，直接访问
+  }
+});
 
 //注册 ElementPlus 组件库中的所有图标到全局 Vue 应用中
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
