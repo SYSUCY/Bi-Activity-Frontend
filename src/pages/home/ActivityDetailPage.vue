@@ -278,6 +278,62 @@
         </el-card>
       </el-col>
     </el-row>
+
+    <el-dialog v-model="showDialog" title="" width="50%" style="height: 50%">
+      <el-row>
+        <el-text size="large" style="font-size: 20px;">
+          报名信息确认
+        </el-text>
+      </el-row>
+      <div style="padding-top: 30px; margin-left: 40%;">
+        <el-row>
+          <el-col :span="4">
+            姓名：
+          </el-col>
+          <el-col :span="8">
+            {{ stuInfo.name }}
+          </el-col>
+        </el-row>
+        <el-row style="padding-top: 20px">
+          <el-col :span="4">
+            学号：
+          </el-col>
+          <el-col :span="8">
+            {{ stuInfo.id }}
+          </el-col>
+        </el-row>
+        <el-row style="padding-top: 30px">
+          <el-col :span="4">
+            院系：
+          </el-col>
+          <el-col :span="8">
+            {{ stuInfo.collegeName }}
+          </el-col>
+        </el-row>
+        <el-row style="padding-top: 30px">
+          <el-col :span="4">
+            电话：
+          </el-col>
+          <el-col :span="8">
+            {{ stuInfo.phone }}
+          </el-col>
+        </el-row>
+        <el-row style="padding-top: 30px">
+          <el-col :span="4">
+            邮箱：
+          </el-col>
+          <el-col :span="8">
+            {{ stuInfo.email }}
+          </el-col>
+        </el-row>
+      </div>
+      <el-row style="padding-top: 30px; display: flex; justify-content: center">
+        <span class="dialog-footer">
+          <el-button @click="showDialog = false">取 消</el-button>
+          <el-button type="primary" @click="submitForm">确 定</el-button>
+        </span>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -286,7 +342,7 @@
 import {computed, onMounted, ref} from "vue";
 import {remainingTime} from "@/utils/parseTime.js";
 import {useRoute} from "vue-router";
-import {getActivityDetail} from "@/api/home/search.js";
+import {getActivityDetail, getStuInfo} from "@/api/home/search.js";
 
 const route = useRoute()
 const ID = computed(() => {
@@ -311,9 +367,33 @@ const rTime = computed(() => {
   return remainingTime(new Date(activity.value.registrationDeadline))
 })
 
+// 报名信息界面
 const participants = () => {
-  console.log(1)
+  initStuInfo();
+  showDialog.value = true;
 }
+
+const stuInfo = ref({})
+const initStuInfo = async () => {
+  try {
+    const res = await getStuInfo({id: 3})
+    if (res.data.label === 200) {
+      stuInfo.value = res.data.data
+    } else {
+      alert("获取学生信息失败或学生信息为空");
+    }
+  } catch (e) {
+    alert("获取学生信息失败")
+  }
+}
+
+// 提交表单逻辑
+const submitForm = () => {
+  // TODO: 发送活动参与请求
+  showDialog.value = false; // 关闭弹窗
+};
+
+const showDialog = ref(false); // 弹窗显示状态
 </script>
 
 <style scoped>

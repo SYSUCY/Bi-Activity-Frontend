@@ -43,3 +43,15 @@ export const participateActivity = async(params) => {
         params: params
     })
 }
+
+// TODO: 更换方式，采用POST 方式
+export const getStuInfo = async(params) => {
+    return myAxios.request({
+        url: "api/student/info",
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params: params
+    })
+}

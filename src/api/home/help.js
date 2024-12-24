@@ -9,3 +9,14 @@ export const getHelpInfo = async() => {
         }
     })
 }
+
+export const searchHelpInfo = async(params) => {
+    return myAxios.request({
+        url: "api/help/search",
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        params: params
+    })
+}

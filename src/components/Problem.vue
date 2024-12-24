@@ -30,13 +30,25 @@
 
 <script setup>
 import {Search} from "@element-plus/icons-vue";
-import {onMounted, ref} from "vue";
-import {getHelpInfo} from "@/api/home/help.js";
+import {onMounted, ref, watch} from "vue";
+import {getHelpInfo, searchHelpInfo} from "@/api/home/help.js";
 
 const keyword = ref('')
-const keywordChange = () => {
-  // TODO：发送后端关键词检索
+const keywordChange = async () => {
 }
+
+watch(keyword, async () => {
+  try {
+    const res = await searchHelpInfo({keyword: keyword.value});
+    if (res.data.label === 200) {
+      problemList.value = res.data.data;
+    } else {
+      console.error('Failed to fetch problem list:', res.data.error);
+    }
+  } catch (error) {
+    console.error('Panic to fetch problem list:', error);
+  }
+}, {deep: true})
 
 const problemList = ref([]);
 onMounted(async () => {
