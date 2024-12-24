@@ -4,7 +4,8 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/pages/HomePage.vue')
+    component: () => import('@/pages/HomePage.vue'),
+    meta: {requiresAuth: true}
   },
   {
     path: "/login", 
@@ -41,6 +42,14 @@ const routes = [
         component: import("@/pages/register/CollegeRegisterPage.vue")
       }
     ]
+  },
+  {
+    path: '/change-password/student',
+    component: () => import('@/pages/forget/StudentForgetPage.vue'),
+  },
+  {
+    path: '/change-password/college',
+    component: () => import('@/pages/forget/CollegeForgetPage.vue'),
   },
 ]
 

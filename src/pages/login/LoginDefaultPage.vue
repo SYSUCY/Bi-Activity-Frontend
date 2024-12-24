@@ -23,7 +23,6 @@ const router = useRouter()
 function navigateTo(path) {
   router.push(path)
 }
-
 </script>
 
 <style scoped>
@@ -38,6 +37,7 @@ function navigateTo(path) {
   font-size: 24px;
   color: #303133;
 }
+
 .login-footer{
   text-align: center;
 }
