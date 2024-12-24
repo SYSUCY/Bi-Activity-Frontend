@@ -60,7 +60,7 @@ import {
   Setting, More,
 } from '@element-plus/icons-vue'
 import {shallowRef} from "vue";
-import problem from "@/components/Problem.vue";
+import problem from "@/components/home/Problem.vue";
 
 const currentComponent = shallowRef(problem);
 
