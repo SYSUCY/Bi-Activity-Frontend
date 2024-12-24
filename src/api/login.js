@@ -1,8 +1,8 @@
 import myAxios from "@/request";
 
-export const studentRegister = async(params) => {
+export const studentLogin = async(params) => {
   return myAxios.request({
-    url: "/student/register",
+    url: "/login",
     method: "POST",
     data: params,
     headers: {
@@ -11,9 +11,9 @@ export const studentRegister = async(params) => {
   });
 };
 
-export const studentLogin = async(params) => {
+export const collegeLogin = async(params) => {
   return myAxios.request({
-    url: "/student/login",
+    url: "/login",
     method: "POST",
     data: params,
     headers: {

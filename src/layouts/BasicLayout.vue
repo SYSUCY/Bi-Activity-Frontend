@@ -37,7 +37,7 @@
   padding: 20px;
 }
 
-#basicLayout .header {
+#basicLayout .register-header {
   padding-inline: 20px;
   //margin-bottom: 16px;
   color: unset;

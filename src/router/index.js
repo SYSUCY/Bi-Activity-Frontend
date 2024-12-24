@@ -40,6 +40,8 @@ const routes = [
     path: '/helpCenter',
     name: 'HelpCenter',
     component: () => import('@/pages/home/HelpCenterPage.vue')
+    component: () => import('@/pages/HomePage.vue'),
+    meta: {requiresAuth: true}
   },
   {
     path: "/login", 
@@ -76,6 +78,14 @@ const routes = [
         component: import("@/pages/register/CollegeRegisterPage.vue")
       }
     ]
+  },
+  {
+    path: '/change-password/student',
+    component: () => import('@/pages/forget/StudentForgetPage.vue'),
+  },
+  {
+    path: '/change-password/college',
+    component: () => import('@/pages/forget/CollegeForgetPage.vue'),
   },
 ]
 
