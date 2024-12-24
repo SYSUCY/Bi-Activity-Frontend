@@ -87,6 +87,74 @@ const routes = [
     path: '/change-password/college',
     component: () => import('@/pages/forget/CollegeForgetPage.vue'),
   },
+
+
+  // 学院个人中心路由
+  // 个人中心
+  {
+    path: "/collegePersonalCenter",
+    component: () => import("@/pages/college/CollegePersonalCenterPage.vue"),
+    children: [
+      {
+        path: '',
+        component: import("@/pages/college/personalCenter/CollegeInfoPage.vue")
+      },
+      {
+        path: 'collegeInfo',
+        component: import("@/pages/college/personalCenter/CollegeInfoPage.vue")
+      },
+      {
+        path: 'personalInfo',
+        component: import("@/pages/college/personalCenter/PersonalInfoPage.vue")
+      },
+      {
+        path: 'myNews',
+        component: import("@/pages/college/personalCenter/MyNewsPage.vue")
+      },
+      {
+        path: 'securitySettings',
+        component: import("@/pages/college/personalCenter/SecuritySettingsPage.vue")
+      }
+    ]
+  },
+  // 人员管理
+  {
+    path: "/collegeMemberManagement",
+    component: () => import("@/pages/college/CollegePersonalCenterPage.vue"),
+    children: [
+      {
+        path: "joinOrgReview",
+        component: import("@/pages/college/memberManagement/JoinOrgReviewPage.vue")
+      },
+      {
+        path: "memberQuery",
+        component: import("@/pages/college/memberManagement/MemberQueryPage.vue")
+      }
+    ]
+  },
+  // 活动管理
+  {
+    path: "/collegeActivityManagement",
+    component: () => import("@/pages/college/CollegePersonalCenterPage.vue"),
+    children: [
+      {
+        path: "activityRelease",
+        component: import("@/pages/college/activityManagement/ActivityReleasePage.vue")
+      },
+      {
+        path: "activityQuery",
+        component: import("@/pages/college/activityManagement/ActivityQueryPage.vue")
+      },
+      {
+        path: "activityReview",
+        component: import("@/pages/college/activityManagement/ActivityReviewPage.vue")
+      },
+      {
+        path: "activityAdmission",
+        component: import("@/pages/college/activityManagement/ActivityAdmissionPage.vue")
+      }
+    ]
+  }
 ]
 
 const router = createRouter({
