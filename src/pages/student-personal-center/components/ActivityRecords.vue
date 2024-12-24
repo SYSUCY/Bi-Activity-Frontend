@@ -52,12 +52,12 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
-import { useStudentStore } from '@/stores/student'
+import { useLoginStore } from '@/stores/login'
 import myAxios from '@/request'
 import ActivityDetailDialog from './dialogs/ActivityDetailDialog.vue'
 import ParticipantListDialog from './dialogs/ParticipantListDialog.vue'
 
-const studentStore = useStudentStore()
+const studentStore = useLoginStore()
 
 // 活动列表数据
 const activities = ref([])

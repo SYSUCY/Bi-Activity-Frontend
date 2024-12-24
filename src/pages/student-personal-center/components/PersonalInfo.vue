@@ -96,12 +96,12 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { useStudentStore } from "@/stores/student"
+import { useLoginStore } from "@/stores/login"
 import { ElMessage } from 'element-plus'
 import myAxios from "@/request"
 
 const formRef = ref(null)
-const studentStore = useStudentStore()
+const studentStore = useLoginStore()
 const collegeId = ref(0)
 const emit = defineEmits(['avatar-updated'])
 

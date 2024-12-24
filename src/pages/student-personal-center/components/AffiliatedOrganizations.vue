@@ -65,11 +65,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { useStudentStore } from '@/stores/student'
+import { useLoginStore } from '@/stores/login'
 import { organizationApi } from '@/api/student-personal-center/organization'
 
 // 数据定义
-const studentStore = useStudentStore()
+const studentStore = useLoginStore()
 const studentId = studentStore.data.id
 const currentCollege = ref(null)
 const dialogVisible = ref(false)

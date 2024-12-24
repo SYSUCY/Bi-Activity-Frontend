@@ -156,11 +156,11 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
-import { useStudentStore } from '@/stores/student'
+import { useLoginStore } from '@/stores/login'
 import myAxios from '@/request'
 import { Plus } from '@element-plus/icons-vue'
 
-const studentStore = useStudentStore()
+const studentStore = useLoginStore()
 const formRef = ref(null)
 
 // 表单数据

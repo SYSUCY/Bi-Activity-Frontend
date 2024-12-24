@@ -177,10 +177,10 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { useStudentStore } from '@/stores/student'
+import { useLoginStore } from '@/stores/login'
 import myAxios from '@/request'
 
-const studentStore = useStudentStore()
+const studentStore = useLoginStore()
 const formRef = ref(null)
 
 // 基本表单数据

@@ -28,10 +28,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useStudentStore } from '@/stores/student'
+import { useLoginStore } from '@/stores/login'
 import myAxios from '@/request'
 
-const studentStore = useStudentStore()
+const studentStore = useLoginStore()
 const userInfo = ref({
   avatarUrl: '',
   name: ''
