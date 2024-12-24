@@ -41,7 +41,7 @@
           <el-row style="padding-top: 10px">
             <el-divider content-position="left">Join In</el-divider>
           </el-row>
-          <el-row style="padding-top: 10px;" v-if="rTime">
+          <el-row style="padding-top: 10px;" v-if="activity.activityStatus === 2">
             <el-col :span="24" style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
               <el-row style="display: flex; justify-content: center;">
                 <el-tag
@@ -85,7 +85,7 @@
                     type="danger"
                     plain size="large"
                     @click="participants()"
-                    :disabled="rTime === 0 || activity.participateStatus !== 0"
+                    :disabled="activity.participateStatus !== 0"
                 >
                   <el-text v-if="activity.participateStatus === 0" size="large">
                     我要报名
@@ -112,7 +112,7 @@
                   style="min-width: 70px; height: 50px; display: flex; align-items: center; justify-content: center;"
               >
                 <el-text size="large">
-                  活动已结束
+                  招募已结束
                 </el-text>
               </el-tag>
             </el-col>
@@ -279,55 +279,78 @@
       </el-col>
     </el-row>
 
-    <el-dialog v-model="showDialog" title="" width="50%" style="height: 50%">
+    <el-dialog v-model="showDialog" title="" width="50%" style="">
       <el-row>
         <el-text size="large" style="font-size: 20px;">
           报名信息确认
         </el-text>
       </el-row>
-      <div style="padding-top: 30px; margin-left: 40%;">
-        <el-row>
-          <el-col :span="4">
-            姓名：
-          </el-col>
-          <el-col :span="8">
+      <div style="padding-top: 30px;">
+        <el-descriptions
+            class="margin-top"
+            :column="2"
+            size="large"
+            border
+            direction="vertical"
+        >
+          <el-descriptions-item>
+            <template #label>
+              <div class="cell-item">
+                <el-icon size="16px">
+                  <user />
+                </el-icon>
+                姓名
+              </div>
+            </template>
             {{ stuInfo.name }}
-          </el-col>
-        </el-row>
-        <el-row style="padding-top: 20px">
-          <el-col :span="4">
-            学号：
-          </el-col>
-          <el-col :span="8">
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template #label>
+              <div class="cell-item">
+                <el-icon size="16px">
+                  <UserFilled />
+                </el-icon>
+                学号
+              </div>
+            </template>
             {{ stuInfo.id }}
-          </el-col>
-        </el-row>
-        <el-row style="padding-top: 30px">
-          <el-col :span="4">
-            院系：
-          </el-col>
-          <el-col :span="8">
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template #label>
+              <div class="cell-item">
+                <el-icon size="16px">
+                  <HomeFilled />
+                </el-icon>
+                所属院系
+              </div>
+            </template>
             {{ stuInfo.collegeName }}
-          </el-col>
-        </el-row>
-        <el-row style="padding-top: 30px">
-          <el-col :span="4">
-            电话：
-          </el-col>
-          <el-col :span="8">
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template #label>
+              <div class="cell-item">
+                <el-icon size="16px">
+                  <iphone />
+                </el-icon>
+                联系电话
+              </div>
+            </template>
             {{ stuInfo.phone }}
-          </el-col>
-        </el-row>
-        <el-row style="padding-top: 30px">
-          <el-col :span="4">
-            邮箱：
-          </el-col>
-          <el-col :span="8">
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template #label>
+              <div class="cell-item">
+                <el-icon size="16px">
+                  <Message />
+                </el-icon>
+                邮箱
+              </div>
+            </template>
             {{ stuInfo.email }}
-          </el-col>
-        </el-row>
+          </el-descriptions-item>
+        </el-descriptions>
       </div>
-      <el-row style="padding-top: 30px; display: flex; justify-content: center">
+      <el-row style="display: flex; justify-content: center; padding-top: 10px;">
         <span class="dialog-footer">
           <el-button @click="showDialog = false">取 消</el-button>
           <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -342,13 +365,17 @@
 import {computed, onMounted, ref} from "vue";
 import {remainingTime} from "@/utils/parseTime.js";
 import {useRoute} from "vue-router";
-import {getActivityDetail, getStuInfo} from "@/api/home/search.js";
+import {getActivityDetail, getStuInfo, participateActivity} from "@/api/home/search.js";
+import {HomeFilled, Iphone, Message, User, UserFilled} from "@element-plus/icons-vue";
+import {useStudentStore} from "@/stores/student.js";
+import router from "@/router/index.js";
 
 const route = useRoute()
 const ID = computed(() => {
   return route.params.id;
 })
 const activity = ref({})
+const showDialog = ref(false); // 弹窗显示状态
 
 onMounted(async () => {
   try {
@@ -369,14 +396,26 @@ const rTime = computed(() => {
 
 // 报名信息界面
 const participants = () => {
+  if(!isAuthenticated()) {
+    alert("请先登录")
+    router.push("/login")
+    return
+  }
   initStuInfo();
   showDialog.value = true;
 }
 
-const stuInfo = ref({})
+const stuInfo = ref({
+  name: "test",
+  id: "test",
+  collegeName: "test",
+  phone: "test",
+  email: "test"
+})
 const initStuInfo = async () => {
   try {
-    const res = await getStuInfo({id: 3})
+    // TODO: 修改为当前的登录用户
+    const res = await getStuInfo({id: 1})
     if (res.data.label === 200) {
       stuInfo.value = res.data.data
     } else {
@@ -389,11 +428,37 @@ const initStuInfo = async () => {
 
 // 提交表单逻辑
 const submitForm = () => {
-  // TODO: 发送活动参与请求
+
+  participate()
   showDialog.value = false; // 关闭弹窗
 };
+const participate = async() => {
+  try {
+    const res = await participateActivity({
+      activity_id: ID.value,
+      // TODO: 修改为当前的登录用户
+      id: 1
+    })
+    if (res.data.label === 200) {
+      alert("报名成功")
+    } else {
+      alert("报名失败")
+    }
+  } catch (e) {
+    alert("报名失败")
+  }
+}
 
-const showDialog = ref(false); // 弹窗显示状态
+function isAuthenticated() {
+  const studentStore = useStudentStore();
+  const { token, expireDate } = studentStore.data;
+  if (!token || !expireDate) return false;
+
+  const now = new Date().getTime();
+  const expiryTime = new Date(expireDate).getTime();
+
+  return now < expiryTime;
+}
 </script>
 
 <style scoped>

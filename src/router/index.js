@@ -1,4 +1,5 @@
 import {createRouter, createWebHistory} from 'vue-router'
+import {useStudentStore} from "@/stores/student.js";
 
 const routes = [
   {
@@ -22,7 +23,10 @@ const routes = [
   {
     path: '/myActivity',
     name: 'MyActivity',
-    component: () => import('@/pages/home/MyActivityPage.vue')
+    component: () => import('@/pages/home/MyActivityPage.vue'),
+    meta: {
+      requiresAuth: true
+    }  // 添加此行
   },
     // TODO: 活动详情页面
   {
@@ -79,5 +83,27 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 })
+
+// 全局前置守卫
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !isAuthenticated()) {
+    alert('请先登录')
+    next('/login');  // 如果未登录，重定向到登录页面
+  } else {
+    next();  // 否则继续导航
+  }
+});
+
+
+function isAuthenticated() {
+  const studentStore = useStudentStore();
+  const { token, expireDate } = studentStore.data;
+  if (!token || !expireDate) return false;
+
+  const now = new Date().getTime();
+  const expiryTime = new Date(expireDate).getTime();
+
+  return now < expiryTime;
+}
 
 export default router
