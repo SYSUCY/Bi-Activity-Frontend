@@ -35,6 +35,7 @@
       </el-menu-item>
       <!-- 测试 -->
       <el-menu-item index="/collegePersonalCenter">学院个人中心</el-menu-item>
+      <el-menu-item index="/studentPersonalCenter/personalInfo">学生个人中心</el-menu-item>
     </el-menu>
     <div class="user-actions">
       <el-button type="primary" @click="navigateTo('/login')">登录</el-button>
@@ -75,7 +76,7 @@ const navigateTo = (path) => {
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
 }
 
 .el-menu-menu {

@@ -78,6 +78,47 @@ const routes = [
     ]
   },
   {
+    path: '/studentPersonalCenter',
+    component: () => import('@/pages/student-personal-center/Layout.vue'), // 更新路径
+    children: [
+      {
+        path: 'personalInfo',
+        name: 'personalInfo',
+        component: () => import('@/pages/student-personal-center/components/PersonalInfo.vue'),
+      },
+      {
+        path: 'affiliatedOrganizations',
+        name: 'affiliatedOrganizations',
+        component: () => import('@/pages/student-personal-center/components/AffiliatedOrganizations.vue'),
+      },
+      {
+        path: 'myMessages',
+        name: 'myMessages',
+        component: () => import('@/pages/student-personal-center/components/MyMessages.vue'),
+      },
+      {
+        path: 'activityRecords',
+        name: 'activityRecords',
+        component: () => import('@/pages/student-personal-center/components/ActivityRecords.vue'),
+      },
+      {
+        path: 'publishActivity',
+        name: 'publishActivity',
+        component: () => import('@/pages/student-personal-center/components/PublishActivity.vue'),
+      },
+      {
+        path: 'activityAdmissions',
+        name: 'activityAdmissions',
+        component: () => import('@/pages/student-personal-center/components/ActivityAdmissions.vue'),
+      },
+      {
+        path: 'securitySettings',
+        name: 'securitySettings', 
+        component: () => import('@/pages/student-personal-center/components/SecuritySettings.vue'),
+      },
+    ],
+  },
+  {
     path: '/change-password/student',
     component: () => import('@/pages/forget/StudentForgetPage.vue'),
   },
