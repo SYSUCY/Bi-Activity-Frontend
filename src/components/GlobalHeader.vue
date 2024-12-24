@@ -33,6 +33,8 @@
       <el-menu-item index="/Test" class="el-menu-item">
         Test
       </el-menu-item>
+      <!-- 测试 -->
+      <el-menu-item index="/collegePersonalCenter">学院个人中心</el-menu-item>
     </el-menu>
     <div class="user-actions">
       <el-button type="primary" @click="navigateTo('/login')">登录</el-button>
