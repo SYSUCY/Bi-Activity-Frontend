@@ -367,7 +367,7 @@ import {remainingTime} from "@/utils/parseTime.js";
 import {useRoute} from "vue-router";
 import {getActivityDetail, getStuInfo, participateActivity} from "@/api/home/search.js";
 import {HomeFilled, Iphone, Message, User, UserFilled} from "@element-plus/icons-vue";
-import {useStudentStore} from "@/stores/student.js";
+import {useLoginStore} from "@/stores/login.js";
 import router from "@/router/index.js";
 
 const route = useRoute()
@@ -450,14 +450,11 @@ const participate = async() => {
 }
 
 function isAuthenticated() {
-  const studentStore = useStudentStore();
-  const { token, expireDate } = studentStore.data;
-  if (!token || !expireDate) return false;
+  const studentStore = useLoginStore();
+  const { token } = studentStore.data;
+  if (!token) return false;
 
-  const now = new Date().getTime();
-  const expiryTime = new Date(expireDate).getTime();
-
-  return now < expiryTime;
+  return true;
 }
 </script>
 
@@ -466,7 +463,6 @@ function isAuthenticated() {
   display: flex;
   justify-content: center;
   height: 100vh; /* 使容器占满整个视口高度 */
-  //overflow: hidden;
   margin-bottom: 50px;
 }
 
