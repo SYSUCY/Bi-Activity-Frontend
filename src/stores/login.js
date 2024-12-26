@@ -14,7 +14,7 @@ export const useLoginStore = defineStore('login', () =>{
 
   const loginOut = () => {
     data.token = ""
-    role = ""
+    data.role = ""
   }
 
   return {

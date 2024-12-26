@@ -38,19 +38,75 @@
       <el-menu-item index="/studentPersonalCenter/personalInfo">学生个人中心</el-menu-item>
     </el-menu>
     <div class="user-actions">
-      <el-button type="primary" @click="navigateTo('/login')">登录</el-button>
-      <el-button type="primary" @click="navigateTo('/register')">注册</el-button>
+      <!-- 登录/注册按钮 -->
+      <template v-if="token === ''">
+        <el-button type="primary" @click="navigateTo('/login')">登录</el-button>
+        <el-button type="primary" @click="navigateTo('/register')">注册</el-button>
+      </template>
+
+      <!-- 用户头像下拉菜单 -->
+      <template v-else-if="role === 'student'">
+        <el-dropdown @command="handleStudentDropdownCommand">
+          <span class="el-dropdown-link">
+            <img :src="userAvatar" alt="学生头像" class="user-avatar" />
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="personalCenter">个人中心</el-dropdown-item>
+              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </template>
+      <template v-else-if="role === 'college'">
+        <el-dropdown @command="handleCollegeDropdownCommand">
+          <span class="el-dropdown-link">
+            <img :src="userAvatar" alt="管理员头像" class="user-avatar" />
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="personalCenter">个人中心</el-dropdown-item>
+              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </template>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import {Help, House, Promotion} from "@element-plus/icons-vue";
+import { useLoginStore } from '@/stores/login';
 
 const activeIndex = ref('/')
 const router = useRouter()
+const userAvatar = ref('https://via.placeholder.com/40') // 默认头像 URL
+
+const loginStore = useLoginStore()
+const token = computed(() => loginStore.data.token)
+const role = computed(() => loginStore.data.role)
+
+// 处理学生头像下拉菜单命令
+const handleStudentDropdownCommand = (command) => {
+  if (command === 'personalCenter') {
+    router.push('/studentPersonalCenter');
+  } else if (command === 'logout') {
+    loginStore.loginOut();
+    router.push({ path: '/login', replace: true });
+  }
+};
+
+// 处理学院头像下拉菜单命令
+const handleCollegeDropdownCommand = (command) => {
+  if (command === 'personalCenter') {
+    router.push('/collegePersonalCenter');
+  } else if (command === 'logout') {
+    loginStore.loginOut();
+    router.push({ path: '/login', replace: true });
+  }
+};
 
 // 监听路由变化，更新当前选中菜单
 router.afterEach((to, from, failure) => {

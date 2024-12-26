@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, cou } from "vue";
 import { collegeLogin } from "@/api/login.js";
 import { useRouter } from 'vue-router';
 import { useLoginStore } from "@/stores/login.js";
@@ -76,7 +76,7 @@ const login = () => {
       }).then((response) => {
         const loginStore = useLoginStore();
         loginStore.loginIn(response.data.data.token, "college")
-        navigateTo('/');
+        navigateTo('/collegePersonalCenter');
       }).catch((err) => {
         console.error(err);
         alert("登录失败，用户名或密码不存在");
