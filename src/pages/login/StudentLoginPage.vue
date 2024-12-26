@@ -75,7 +75,7 @@ const login = () => {
         "role": "student"
       }).then((response) => {
         const loginStore = useLoginStore();
-        loginStore.loginIn(response.data.data.token)
+        loginStore.loginIn(response.data.data.token, "student")
         navigateTo('/');
       }).catch((err) => {
         console.error(err);

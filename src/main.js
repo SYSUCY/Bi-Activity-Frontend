@@ -21,11 +21,16 @@ app.use(router)
 router.beforeEach((to, from, next) => {
   const loginStore = useLoginStore();
   const token = loginStore.data.token;
+  const role = loginStore.data.role;
   // 如果目标页面需要登录验证
   if (to.meta.requiresAuth) {
     // 如果没有 token（未登录），跳转到登录页面
     if (!token) { 
       alert("当前界面需要登录方可访问");
+      next("/login");
+    }
+    else if (to.meta.role != role){ 
+      alert("您没有权限访问该界面");
       next("/login");
     } else {
       next(); // 继续访问目标页面

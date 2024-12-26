@@ -23,7 +23,8 @@ const routes = [
     name: 'MyActivity',
     component: () => import('@/pages/home/MyActivityPage.vue'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      role: 'student',
     }  // 添加此行
   },
     // TODO: 活动详情页面
@@ -38,7 +39,6 @@ const routes = [
     path: '/helpCenter',
     name: 'HelpCenter',
     component: () => import('@/pages/home/HelpCenterPage.vue'),
-    meta: {requiresAuth: true}
   },
 
   // 登录注册路由
@@ -128,7 +128,10 @@ const routes = [
         component: () => import('@/pages/student-personal-center/components/SecuritySettings.vue'),
       },
     ],
-    meta: {requiresAuth: true}
+    meta: {
+      requiresAuth: true,
+      role:'student'
+    }
   },
 
   // 学院个人中心路由
@@ -157,7 +160,7 @@ const routes = [
         component: import("@/pages/college/personalCenter/SecuritySettingsPage.vue")
       }
     ],
-    meta: {requiresAuth: true}
+    meta: {requiresAuth: true, role: 'college'}
   },
   // 人员管理
   {
@@ -173,7 +176,7 @@ const routes = [
         component: import("@/pages/college/memberManagement/MemberQueryPage.vue")
       }
     ],
-    meta: {requiresAuth: true}
+    meta: {requiresAuth: true, role: 'college'}
   },
   // 活动管理
   {
@@ -197,7 +200,7 @@ const routes = [
         component: import("@/pages/college/activityManagement/ActivityAdmissionPage.vue")
       }
     ],
-    meta: {requiresAuth: true}
+    meta: {requiresAuth: true, role: 'college'}
   }
 ]
 

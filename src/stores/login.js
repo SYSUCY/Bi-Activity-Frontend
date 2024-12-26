@@ -4,14 +4,17 @@ import {defineStore} from 'pinia'
 export const useLoginStore = defineStore('login', () =>{
   const data = reactive({
     token: "",
+    role: "",
   })
 
-  const loginIn = (token) => {
+  const loginIn = (token, role) => {
     data.token = token
+    data.role = role
   }
 
   const loginOut = () => {
     data.token = ""
+    role = ""
   }
 
   return {
