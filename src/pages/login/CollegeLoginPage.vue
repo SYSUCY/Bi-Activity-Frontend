@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, cou } from "vue";
+import { reactive, ref } from "vue";
 import { collegeLogin } from "@/api/login.js";
 import { useRouter } from 'vue-router';
 import { useLoginStore } from "@/stores/login.js";
