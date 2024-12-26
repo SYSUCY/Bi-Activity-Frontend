@@ -10,7 +10,6 @@ const routes = [
     path: '/',
     name: 'Home',
     component: () => import('@/pages/home/HomePage.vue'),
-
   },
   // TODO: 搜索页面
   {
@@ -41,6 +40,8 @@ const routes = [
     component: () => import('@/pages/home/HelpCenterPage.vue'),
     meta: {requiresAuth: true}
   },
+
+  // 登录注册路由
   {
     path: "/login", 
     component: () => import("@/pages/LoginPage.vue"),
@@ -77,6 +78,16 @@ const routes = [
       }
     ]
   },
+  {
+    path: '/change-password/student',
+    component: () => import('@/pages/forget/StudentForgetPage.vue'),
+  },
+  {
+    path: '/change-password/college',
+    component: () => import('@/pages/forget/CollegeForgetPage.vue'),
+  },
+
+  // 学生个人中心路由
   {
     path: '/studentPersonalCenter',
     component: () => import('@/pages/student-personal-center/Layout.vue'), // 更新路径
@@ -117,18 +128,10 @@ const routes = [
         component: () => import('@/pages/student-personal-center/components/SecuritySettings.vue'),
       },
     ],
-  },
-  {
-    path: '/change-password/student',
-    component: () => import('@/pages/forget/StudentForgetPage.vue'),
-  },
-  {
-    path: '/change-password/college',
-    component: () => import('@/pages/forget/CollegeForgetPage.vue'),
+    meta: {requiresAuth: true}
   },
 
   // 学院个人中心路由
-  // 个人中心
   {
     path: "/collegePersonalCenter",
     component: () => import("@/pages/college/CollegePersonalCenterPage.vue"),
@@ -153,7 +156,8 @@ const routes = [
         path: 'securitySettings',
         component: import("@/pages/college/personalCenter/SecuritySettingsPage.vue")
       }
-    ]
+    ],
+    meta: {requiresAuth: true}
   },
   // 人员管理
   {
@@ -168,7 +172,8 @@ const routes = [
         path: "memberQuery",
         component: import("@/pages/college/memberManagement/MemberQueryPage.vue")
       }
-    ]
+    ],
+    meta: {requiresAuth: true}
   },
   // 活动管理
   {
@@ -191,7 +196,8 @@ const routes = [
         path: "activityAdmission",
         component: import("@/pages/college/activityManagement/ActivityAdmissionPage.vue")
       }
-    ]
+    ],
+    meta: {requiresAuth: true}
   }
 ]
 
