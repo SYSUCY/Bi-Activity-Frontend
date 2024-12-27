@@ -30,18 +30,12 @@
         </el-icon>
         帮助中心
       </el-menu-item>
-      <el-menu-item index="/Test" class="el-menu-item">
-        Test
-      </el-menu-item>
-      <!-- 测试 -->
-      <el-menu-item index="/collegePersonalCenter">学院个人中心</el-menu-item>
-      <el-menu-item index="/studentPersonalCenter/personalInfo">学生个人中心</el-menu-item>
     </el-menu>
     <div class="user-actions">
       <!-- 登录/注册按钮 -->
       <template v-if="token === ''">
-        <el-button type="primary" @click="navigateTo('/login')">登录</el-button>
-        <el-button type="primary" @click="navigateTo('/register')">注册</el-button>
+        <el-link type="primary" @click="navigateTo('/login')">登录</el-link>
+        <el-link @click="navigateTo('/register')">注册</el-link>
       </template>
 
       <!-- 用户头像下拉菜单 -->

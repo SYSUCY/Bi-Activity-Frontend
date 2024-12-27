@@ -2,8 +2,14 @@
   <div id="studentLoginPage">
     <el-container class="login-container">
       <el-header class="login-header">
-        <span><el-icon><School /></el-icon>学院登录</span>
-        <el-button type="primary" @click="navigateTo('/login/student')">切换学生登录</el-button>
+        <span>
+          <el-icon><School /></el-icon>
+          学院登录
+        </span>
+        <el-link type="primary" @click="navigateTo('/login/student')">
+          <el-icon><UserFilled /></el-icon>
+          切换学生登录
+        </el-link>
       </el-header>
       <el-main>
         <el-form :model="loginForm" :rules="rules" ref="loginFormRef">
@@ -28,8 +34,8 @@
         </el-button>
       </el-main>
       <el-footer class="login-footer">
-        <el-link @click="navigateTo('/change-password/college')">忘记密码</el-link>
-        <el-link @click="navigateTo('/register/college')">还没有账号？点击注册</el-link>
+        <el-link type="primary" @click="navigateTo('/change-password/college')">忘记密码</el-link>
+        <el-link type="primary" @click="navigateTo('/register/college')">还没有账号？点击注册</el-link>
       </el-footer>
     </el-container>    
   </div>
@@ -92,8 +98,10 @@ const login = () => {
 .login-header {
   display: flex;
   justify-content: space-between;
+  align-items: flex-end; /* 使所有内容在垂直方向上对齐 */
   width: 100%;
-  padding: 20px;
+  padding: 10px;
+  font-size: 24px;
 }
 
 .login-footer {
