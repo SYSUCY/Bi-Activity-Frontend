@@ -14,10 +14,10 @@
           <span class="value">{{ currentCollege.collegeName }}</span>
         </div>
         <div class="actions">
-          <el-button class = "btn change" type="primary" size="default" @click="handleChangeCollege">
+          <el-button class="btn change" type="primary" size="default" @click="handleChangeCollege">
             更换组织
           </el-button>
-          <el-button class = "btn delete" type="danger" size="default" @click="handleRemoveCollege">
+          <el-button class="btn delete" type="danger" size="default" @click="handleRemoveCollege">
             退出组织
           </el-button>
         </div>
@@ -66,11 +66,9 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useLoginStore } from '@/stores/login'
-import { organizationApi } from '@/api/student-personal-center/organization'
+import myAxios from '@/request'
 
 // 数据定义
-const studentStore = useLoginStore()
-const studentId = studentStore.data.id
 const currentCollege = ref(null)
 const dialogVisible = ref(false)
 const collegeList = ref([])
@@ -84,24 +82,16 @@ onMounted(() => {
   fetchCollegeList()
 })
 
-// 方法定义
-// 调用API获取当前学生的学院信息
+// 获取当前学院信息
 const fetchCurrentCollege = async () => {
-  if (!studentId) {
-    ElMessage.error('未获取到学生信息')
-    return
-  }
-
   try {
-    const response = await organizationApi.getStudentCollege(studentId)
-    // console.log('API response:', response)
+    const response = await myAxios.get('/api/studentPersonalCenter/affiliatedOrganizations/student')
     if (response.data.code === 0) {
       currentCollege.value = {
         collegeName: response.data.data.college_name
       }
-      // console.log('currentCollege value:', currentCollege.value)
     } else {
-      ElMessage.error(response.message || '获取组织信息失败')
+      ElMessage.error(response.data.message || '获取组织信息失败')
       currentCollege.value = null
     }
   } catch (error) {
@@ -109,31 +99,29 @@ const fetchCurrentCollege = async () => {
     console.error('获取组织信息失败:', error)
     currentCollege.value = null
   }
-  
 }
 
+// 获取学院列表
 const fetchCollegeList = async () => {
-  // 调用API获取学院列表
   try {
-    const response = await organizationApi.getCollegeList()
-
+    const response = await myAxios.get('/api/studentPersonalCenter/affiliatedOrganizations/list')
     if (response.data.code === 0) {
-      collegeList.value = response.data.data.colleges || [] 
+      collegeList.value = response.data.data.colleges || []
     } else {
-      ElMessage.error(response.message || '获取学院列表信息失败')
-      console.error('获取学院列表信息失败:', response.message)
+      ElMessage.error(response.data.message || '获取学院列表信息失败')
     }
-    
   } catch (error) {
     ElMessage.error('获取学院列表信息失败')
     console.error('获取学院列表信息失败:', error)
   }
 }
 
+// 显示更换学院对话框
 const handleChangeCollege = () => {
   dialogVisible.value = true
 }
 
+// 处理退出学院
 const handleRemoveCollege = async () => {
   try {
     await ElMessageBox.confirm('确认退出当前归属组织？', '提示', {
@@ -142,49 +130,48 @@ const handleRemoveCollege = async () => {
       type: 'warning'
     })
     
-    const response = await organizationApi.removeStudentCollege(studentId);
+    const response = await myAxios.delete('/api/studentPersonalCenter/affiliatedOrganizations')
     if (response.data.code === 0) {
-      ElMessage.success('已成功退出组织');
-      currentCollege.value = null;
+      ElMessage.success('已成功退出组织')
+      currentCollege.value = null
     } else {
-      ElMessage.error(response.data.message || '退出组织失败');
+      ElMessage.error(response.data.message || '退出组织失败')
     }
-
-  } catch {
+  } catch (error) {
     if (error !== 'cancel') {
-      ElMessage.error('退出组织失败');
-      console.error('退出组织失败:', error);
+      ElMessage.error('退出组织失败')
+      console.error('退出组织失败:', error)
     }
   }
 }
 
+// 确认更换学院
 const confirmChangeCollege = async () => {
   if (!form.value.collegeId) {
     ElMessage.warning('请选择学院')
     return
   }
+
   try {
-    // 调用更新 API
-    const response = await organizationApi.updateStudentCollege(studentId, form.value.collegeId);
+    const response = await myAxios.put('/api/studentPersonalCenter/affiliatedOrganizations', {
+      college_id: form.value.collegeId
+    })
 
     if (response.data.code === 0) {
-      ElMessage.success('组织更新成功');
-      dialogVisible.value = false;
-
-      // 刷新当前学院信息
-      await fetchCurrentCollege();
+      ElMessage.success('组织更新成功')
+      dialogVisible.value = false
+      await fetchCurrentCollege()
     } else {
-      ElMessage.error(response.data.message || '更新组织失败');
+      ElMessage.error(response.data.message || '更新组织失败')
     }
   } catch (error) {
-    ElMessage.error('更新组织失败');
-    console.error('更新组织失败:', error);
+    ElMessage.error('更新组织失败')
+    console.error('更新组织失败:', error)
   }
 }
 </script>
 
 <style scoped>
-
 .btn {
   font-size: 14px;
 }
@@ -221,7 +208,6 @@ const confirmChangeCollege = async () => {
 }
 
 .value {
-  
   font-size: 16px;
 }
 

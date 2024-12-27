@@ -4,7 +4,6 @@ import request from '@/request'
 export const organizationApi = {
     // 获取学生所属学院
     getStudentCollege(studentId) {
-        // console.log('Calling API with studentId:', studentId)
         return request({
             url: `/api/studentPersonalCenter/affiliatedOrganizations/${studentId}`,
             method: 'get'

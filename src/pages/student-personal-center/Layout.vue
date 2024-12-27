@@ -42,7 +42,7 @@ const loadUserInfo = async () => {
   try {
     // 获取学生基本信息
     const { data: response } = await myAxios.get(
-      `/api/studentPersonalCenter/studentPersonalInfo/${studentStore.data.id}`
+      '/api/studentPersonalCenter/studentPersonalInfo'
     )
     
     if (response.code === 0) {

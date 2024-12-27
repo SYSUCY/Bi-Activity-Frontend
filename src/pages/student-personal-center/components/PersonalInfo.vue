@@ -133,10 +133,11 @@ const rules = {
 }
 
 // 获取学生信息
-const loadStudentInfo = async (studentId) => {
+const loadStudentInfo = async () => {
   try {
-    const { data: response } = await myAxios.get(`/api/studentPersonalCenter/studentPersonalInfo/${studentId}`)
-    const studentData = response.data
+    // 获取学生基本信息
+    const response = await myAxios.get('/api/studentPersonalCenter/studentPersonalInfo')
+    const studentData = response.data.data
 
     // 更新表单数据
     Object.assign(form, {
@@ -150,23 +151,23 @@ const loadStudentInfo = async (studentId) => {
 
     collegeId.value = studentData.college_id
 
-    // 添加头像加载逻辑
+    // 加载头像
     if (studentData.student_avatar_id) {
-      const { data: imageRes } = await myAxios.get(
+      const imageResponse = await myAxios.get(
         `/api/studentPersonalCenter/image/${studentData.student_avatar_id}`
       )
-      if (imageRes.code === 0) {
-        form.avatarUrl = imageRes.data.url
+      if (imageResponse.data.code === 0) {
+        form.avatarUrl = imageResponse.data.data.url
       }
     }
 
     // 获取学院信息
     if (studentData.college_id) {
       try {
-        const { data: collegeResponse } = await myAxios.get(
-          `/api/studentPersonalCenter/affiliatedOrganizations/${studentId}`
+        const collegeResponse = await myAxios.get(
+          '/api/studentPersonalCenter/affiliatedOrganizations/student'
         )
-        form.college = collegeResponse.data.college_name || '未知学院'
+        form.college = collegeResponse.data.data.college_name || '未知学院'
       } catch (error) {
         console.error('获取学院信息失败', error)
         form.college = '获取学院信息失败'
@@ -218,11 +219,7 @@ const handleReset = () => {
 
 // 组件挂载时加载数据
 onMounted(() => {
-  if (studentStore.data.id) {
-    loadStudentInfo(studentStore.data.id)
-  } else {
-    ElMessage.error('用户 ID 未找到')
-  }
+  loadStudentInfo()
 })
 
 // 添加更新头像的方法

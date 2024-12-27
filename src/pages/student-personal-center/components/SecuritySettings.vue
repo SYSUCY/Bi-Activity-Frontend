@@ -192,7 +192,7 @@ const form = reactive({
 // 加载安全设置信息
 const loadSecurityInfo = async () => {
   try {
-    const { data: res } = await myAxios.get(`/api/studentPersonalCenter/securitySettings/${studentStore.data.id}`)
+    const { data: res } = await myAxios.get('/api/studentPersonalCenter/securitySettings')
     form.phone = res.data.phone
     form.email = res.data.email
   } catch (error) {
@@ -226,7 +226,7 @@ const handleUpdatePassword = async () => {
   try {
     const { oldPassword, newPassword, confirmPassword } = passwordDialog.form
     await myAxios.put(
-      `/api/studentPersonalCenter/securitySettings/${studentStore.data.id}/password`,
+      '/api/studentPersonalCenter/securitySettings/password',
       {
         old_password: oldPassword,
         new_password: newPassword,
@@ -345,7 +345,7 @@ const handleSendPhoneCode = async () => {
 
     // 发送验证码
     await myAxios.post(
-      `/api/studentPersonalCenter/securitySettings/${studentStore.data.id}/phone/code`,
+      '/api/studentPersonalCenter/securitySettings/phone/code',
       { phone: phoneDialog.form.phone }
     )
 
@@ -368,7 +368,7 @@ const handleSendPhoneCode = async () => {
 const handleBindPhone = async () => {
   try {
     await myAxios.post(
-      `/api/studentPersonalCenter/securitySettings/${studentStore.data.id}/phone`,
+      '/api/studentPersonalCenter/securitySettings/phone',
       phoneDialog.form
     )
     ElMessage.success('手机号绑定成功')
@@ -385,7 +385,7 @@ const handleUnbindPhone = async () => {
       type: 'warning',
     })
     await myAxios.delete(
-      `/api/studentPersonalCenter/securitySettings/${studentStore.data.id}/phone`
+      '/api/studentPersonalCenter/securitySettings/phone'
     )
     ElMessage.success('手机号解绑成功')
     loadSecurityInfo()
@@ -425,7 +425,7 @@ const handleSendEmailCode = async () => {
 
     // 发送验证码
     await myAxios.post(
-      `/api/studentPersonalCenter/securitySettings/${studentStore.data.id}/email/code`,
+      '/api/studentPersonalCenter/securitySettings/email/code',
       { email: emailDialog.form.email }
     )
 
@@ -449,7 +449,7 @@ const handleSendEmailCode = async () => {
 const handleBindEmail = async () => {
   try {
     await myAxios.post(
-      `/api/studentPersonalCenter/securitySettings/${studentStore.data.id}/email`,
+      '/api/studentPersonalCenter/securitySettings/email',
       emailDialog.form
     )
     ElMessage.success('邮箱绑定成功')
@@ -467,7 +467,7 @@ const handleUnbindEmail = async () => {
       type: 'warning',
     })
     await myAxios.delete(
-      `/api/studentPersonalCenter/securitySettings/${studentStore.data.id}/email`
+      '/api/studentPersonalCenter/securitySettings/email'
     )
     ElMessage.success('邮箱解绑成功')
     loadSecurityInfo()

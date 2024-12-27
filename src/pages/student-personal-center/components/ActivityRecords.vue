@@ -75,7 +75,7 @@ const detailDialog = reactive({
 const loadActivities = async () => {
   try {
     const { data: res } = await myAxios.get(
-      `/api/studentPersonalCenter/activityManage/${studentStore.data.id}`
+      '/api/studentPersonalCenter/activityManage'
     )
     if (res.code === 0) {
       activities.value = res.data.activities  // 从 data.activities 获取列表
