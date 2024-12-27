@@ -86,10 +86,10 @@ onMounted(async() => {
     if (res.data.label === 200) {
       biData.value = res.data.data
     } else {
-      console.log("Failed to fetch biData:", res.data.error)
+      console.error("Failed to fetch biData:", res.data.error)
     }
   } catch (error) {
-    console.log("Panic to fetch biData:", error)
+    console.error("Panic to fetch biData:", error)
   }
 })
 
@@ -100,10 +100,10 @@ onMounted(async() => {
     if (res.data.label === 200) {
       leaderboardData.value = res.data.data
     } else {
-      console.log('Failed to fetch leaderboard data:', res.data.error)
+      console.error('Failed to fetch leaderboard data:', res.data.error)
     }
   } catch (error) {
-    console.log('Panic to fetch leaderboard data:', error)
+    console.error('Panic to fetch leaderboard data:', error)
   }
 })
 </script>

@@ -33,10 +33,10 @@ import {Search} from "@element-plus/icons-vue";
 import {onMounted, ref, watch} from "vue";
 import {getHelpInfo, searchHelpInfo} from "@/api/home/help.js";
 
+// 关键词搜索
 const keyword = ref('')
 const keywordChange = async () => {
 }
-
 watch(keyword, async () => {
   try {
     const res = await searchHelpInfo({keyword: keyword.value});
@@ -46,10 +46,11 @@ watch(keyword, async () => {
       console.error('Failed to fetch problem list:', res.data.error);
     }
   } catch (error) {
-    console.error('Panic to fetch problem list:', error);
+    console.error('Panic to fetch problem list:', error.response.data.error);
   }
 }, {deep: true})
 
+// 问题列表
 const problemList = ref([]);
 onMounted(async () => {
   try {
@@ -57,10 +58,10 @@ onMounted(async () => {
     if (res.data.label === 200) {
       problemList.value = res.data.data;
     } else {
-      console.log('Failed to fetch problem list:', res.data.error);
+      console.error('Failed to fetch problem list:', res.data.error);
     }
   } catch (error) {
-    console.log('Panic to fetch problem list:', error);
+    console.error('Panic to fetch problem list:', error.response.data.error);
   }
 })
 </script>

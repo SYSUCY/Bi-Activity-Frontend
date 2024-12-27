@@ -10,7 +10,7 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {getHomeLoopImages, getImageByUrl} from "@/api/home/home.js";
+import {getHomeLoopImages} from "@/api/home/home.js";
 
 const imageSlider = ref([]);
 const images = ref([]);
@@ -19,16 +19,8 @@ onMounted(async () => {
     const res = await getHomeLoopImages();
     if (res.data.label === 200) {
       imageSlider.value = res.data.data
-      // fileName: "image4"
-      // id: 4
-      // url: "url4"
-      // TODO: 请求远程图片
-      // for (let i = 0; i < imageSlider.value.length; i++) {
-      //   const image = getImageByUrl(imageSlider.value[i].url)
-      //   images.value.push(image);
-      // }
     } else {
-      console.error("Failed to fetch loop-images error: ", res.data.error);
+      alert("Failed to fetch loop-images error: " + res.data.error)
     }
   } catch (error) {
     console.error("Panic to fetch loop-images error: ", error);
@@ -56,7 +48,6 @@ el-carousel-item {
 .el-carousel__item img {
   width: 100%;
   height: 100%;
-  //object-fit: cover; /* 裁剪图片以适应容器 */
   color: #475669;
   opacity: 0.75;
   margin: 0;

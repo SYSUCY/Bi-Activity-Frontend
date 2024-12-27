@@ -38,16 +38,12 @@ import {getActivityTypeList} from "@/api/home/home.js";
 import {MoreFilled} from "@element-plus/icons-vue";
 import router from "@/router/index.js";
 
-// TODO: type图片展示
 const typeList = ref([]);
 onMounted(async () => {
   try {
     const res = await getActivityTypeList();
     if (res.data.label === 200) {
       typeList.value = res.data.data;
-      // id: 1
-      // typeName: "type1"
-      // url: "url1"
     } else {
       console.error("Failed to fetch activity type list:", res.data.error);
     }
@@ -56,6 +52,8 @@ onMounted(async () => {
   }
 });
 
+// 跳转到活动查询页面
+// TODO: 可选--跳转至活动查询页面，并自动填充分类条件
 const clickTypeCard = () => {
   router.push({name: 'ActivityQuery'})
 }

@@ -67,10 +67,12 @@ import {getPopularActivityList} from "@/api/home/home.js";
 import {More} from "@element-plus/icons-vue";
 import router from "@/router/index.js";
 
+// 跳转至活动查询页面
 const gotoActivityQuery = () => {
   router.push({name: 'ActivityQuery'})
 }
 
+// 点击卡片跳转至活动详情页面
 const clickActivityCard = (id) => {
   router.push({name: 'ActivityDetail', params: {id: id}})
 }
@@ -81,18 +83,6 @@ onMounted(async() => {
     const res = await getPopularActivityList();
     if (res.data.label === 200) {
       activityList.value = res.data.data;
-      // type ActivityCard struct {
-      //   ID                    uint   `json:"id"`                    // 主键
-      //   ActivityName          string `json:"activityName"`          // 活动名称
-      //   ActivityDate          string `json:"activityDate"`          // 活动日期：YYYY-MM-DD
-      //   StartTime             string `json:"startTime"`             // 活动开始时间： HH:MM
-      //   EndTime               string `json:"endTime"`               // 活动结束时间： HH:MM
-      //   ActivityPublisherName string `json:"activityPublisherName"` // 发布者名称
-      //   ActivityTypeName      string `json:"activityTypeName"`      // 活动类型名称
-      //   ActivityTypeImageUrl  string `json:"activityTypeImageUrl"`  // 活动类型图片地址
-      //   RemainingNumber       int    `json:"remainingNumber"`       // 活动招募剩余人数
-      // }
-      // TODO: 活动类型图片的展示
     } else {
       console.error("Failed to fetch popular activity list:", res.data.error);
     }
