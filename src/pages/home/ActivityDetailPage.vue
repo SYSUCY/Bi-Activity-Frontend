@@ -451,8 +451,8 @@ const initStuInfo = async () => {
   }
 }
 // 提交表单逻辑
-const submitForm = () => {
-  participate()
+const submitForm = async () => {
+  await participate()
   showDialog.value = false; // 关闭弹窗
 };
 const participate = async() => {
@@ -461,6 +461,7 @@ const participate = async() => {
       activity_id: activityID.value,
     })
     if (res.data.label === 200) {
+      activity.value.participateStatus = 1
       alert("报名成功")
     } else {
       alert("报名失败")
