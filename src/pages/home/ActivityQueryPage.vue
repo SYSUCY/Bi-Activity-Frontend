@@ -126,7 +126,7 @@
             background layout="prev, pager, next"
             :total="totalNum"
             :default-page-size="9"
-            @current-change="handleCurrentChange"
+            @current-change="handlePageChange"
         />
       </el-row>
     </div>
@@ -142,19 +142,26 @@ import {Search} from "@element-plus/icons-vue";
 import {searchActivity} from "@/api/home/search.js";
 import router from "@/router/index.js";
 
+// 活动性质: 0:全部 1:学生 2:学院
 const nature = ref("0")
 const natureChange =  () => {
 }
 
+// 活动状态: 0:全部 2:报名中 3:进行中 4:已结束
 const status = ref("0")
 const statusChange = () => {
 }
 
+// 活动日期: "":全部  [开始日期, 结束日期]
 const activityData = ref('')
 const dataChange = () => {
 }
 
+// 活动类型: 0:全部 其他:类型ID
 const typeID = ref("0");
+const typeIDChange = () => {
+}
+// 获取活动类型列表
 const typeList = ref([]);
 onMounted(async () => {
   try {
@@ -168,17 +175,20 @@ onMounted(async () => {
     console.error("Panic to fetch activity type list:", error);
   }
 });
-const typeIDChange = () => {
-}
 
+
+// 关键词："":全部 其他:关键词
 const keyword = ref("");
 const keywordChange = () => {
 }
 
-const handleCurrentChange = (val) => {
+// 分页查询
+const totalNum = ref(0);
+const handlePageChange = (val) => {
   const params = ref({
     nature: nature.value,
     status: status.value,
+    // 如果有活动时间，转化为time.DateOnly格式，否则为""表示全部活动
     start: activityData.value[0] ? parseTime(new Date(activityData.value[0]).getTime()) : "",
     end: activityData.value[1] ? parseTime(new Date(activityData.value[1]).getTime()) : "",
     type_id: typeID.value,
@@ -186,13 +196,15 @@ const handleCurrentChange = (val) => {
     page: val
   })
   fetchSearchResults(params);
-  console.log(val)
 }
 
+// 搜索活动列表
+const search = ref([]);
 const params = computed(() => {
   return {
     nature: nature.value,
     status: status.value,
+    // 如果有活动时间，转化为time.DateOnly格式，否则为""表示全部活动
     start: activityData.value? parseTime(new Date(activityData.value[0]).getTime()): "",
     end: activityData.value? parseTime(new Date(activityData.value[1]).getTime()): "",
     type_id: typeID.value,
@@ -200,31 +212,26 @@ const params = computed(() => {
     page: 1
   }
 })
-
-const search = ref([]);
-const totalNum = ref(0);
-
 const fetchSearchResults = async (params) => {
   try {
     const res = await searchActivity(params.value);
     if (res.data.label === 200) {
-      console.log(res.data.data);
       search.value = res.data.data[0];
+      // 返回活动总数，用于分页
       return res.data.data[1];
     } else {
       console.error("Failed to fetch search result:", res.data.error);
-      search.value = [];
     }
   } catch (e) {
     console.error("Panic to fetch search result:", e);
-    search.value = [];
   }
 };
-
 watch(params, async () => {
   totalNum.value = await fetchSearchResults(params);
 }, {immediate: true})
 
+// 点击活动卡片 -> 跳转到活动详情页
+// TODO: 当前跳转后查询参数会被重置，需要改进
 const clickActivityCard = (id) => {
   router.push({name: 'ActivityDetail', params: {id: id}})
 }

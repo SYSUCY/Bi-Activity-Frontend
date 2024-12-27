@@ -3,11 +3,13 @@
     <el-row :gutter="20" class="centered-row">
       <el-col :span="8" class="contain-col" :xs="24">
         <el-card style="width: 100%;">
+<!--          左侧活动图片-->
           <el-row style="display: flex; justify-content: center;">
             <el-col :span="24" style="display: flex; justify-content: center;">
               <el-image style="width: 100%; height: 200px" :src="activity.activityImageUrl" fit="scale-down" />
             </el-col>
           </el-row>
+<!--          左侧活动类型图片 + 活动类型名称-->
           <el-row style="padding-top: 10px;">
             <el-col :span="4">
               <el-image style="width: 100%; height: 50px" :src="activity.activityTypeImageUrl" fit="scale-down" />
@@ -18,11 +20,13 @@
               </el-text>
             </el-col>
           </el-row>
+<!--          左侧活动名称-->
           <el-row style="padding-top: 10px;">
             <el-text size="large" style="font-size: 20px">
               {{ activity.activityName }}
             </el-text>
           </el-row>
+<!--          左侧活动基本信息-->
           <el-row style="padding-top: 10px;">
             <el-text size="large">
               发布组织: {{ activity.publisherName}}
@@ -41,79 +45,65 @@
           <el-row style="padding-top: 10px">
             <el-divider content-position="left">Join In</el-divider>
           </el-row>
-          <el-row style="padding-top: 10px;" v-if="activity.activityStatus === 2">
+<!--          左侧活动报名信息：只有当活动处于招募状态的时候才展示-->
+          <el-row style="padding-top: 10px;" v-if="showParticipant === 0">
             <el-col :span="24" style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
+<!--              活动剩余天数展示-->
               <el-row style="display: flex; justify-content: center;">
-                <el-tag
-                    effect="dark"
-                    type="danger"
-                    size="large"
-                    style="min-width: 70px; height: 40px; display: flex; align-items: center; justify-content: center;"
-                >
-                  {{ rTime }}
-                </el-tag>
-                <el-text
-                    style="text-align: left; padding-left: 4px; align-self: flex-end;"
-                    size="large">
-                  天
-                </el-text>
+                <el-tag effect="dark" type="danger" size="large" style="min-width: 70px; height: 40px; display: flex; align-items: center; justify-content: center;">{{ rTime }}</el-tag>
+                <el-text style="text-align: left; padding-left: 4px; align-self: flex-end;" size="large">天</el-text>
               </el-row>
               <el-row style="margin-top: 5px; margin-left: -10px;">
                 <el-text size="large">
                   活动截止报名剩余 {{ rTime }} 天
                 </el-text>
               </el-row>
+<!--              活动人数展示-->
               <el-row style="padding-top: 40px; display: flex; justify-content: center;">
-                <el-tag
-                    effect="dark"
-                    type="danger"
-                    size="large"      style="width: 70px; height: 40px; display: flex; align-items: center; justify-content: center;"
-                >
-                  {{ activity.recruitedNumber }}
-                </el-tag>
-                <el-text style="text-align: left; padding-left: 4px; align-self: flex-end;" size="large">
-                  人
-                </el-text>
+                <el-tag effect="dark" type="danger" size="large" style="width: 70px; height: 40px; display: flex; align-items: center; justify-content: center;">{{ activity.recruitedNumber }}</el-tag>
+                <el-text style="text-align: left; padding-left: 4px; align-self: flex-end;" size="large"> 人 </el-text>
               </el-row>
               <el-row style="margin-top: 5px; margin-left: -10px;">
                 <el-text size="large">
                   报名人数{{ activity.recruitedNumber }}人（满额 {{ activity.recruitmentNumber }} 人）
                 </el-text>
               </el-row>
+<!--              活动报名按钮-->
               <el-row style="padding-top: 25px; margin-left: -20px;">
                 <el-button
                     type="danger"
                     plain size="large"
                     @click="participants()"
-                    :disabled="activity.participateStatus !== 0"
+                    :disabled="JoinButton()"
                 >
-                  <el-text v-if="activity.participateStatus === 0" size="large">
+                  <el-text v-if="activity.isCompliance === 0" size="large">
+                    条件不符
+                  </el-text>
+                  <el-text v-else-if="activity.participateStatus === 0" size="large">
                     我要报名
                   </el-text>
-                  <el-text v-if="activity.participateStatus === 1" size="large">
+                  <el-text v-else-if="activity.participateStatus === 1" size="large">
                     等待审核
                   </el-text>
                   <el-text v-else-if="activity.participateStatus === 2" size="large">
-                    已报名
+                    报名成功
                   </el-text>
                 </el-button>
               </el-row>
               <el-row style="padding-top: 10px;"></el-row>
             </el-col>
           </el-row>
+          <el-row v-else-if="showParticipant === 1">
+            <el-col style="display: flex; justify-content: center; padding-top: 20px; padding-bottom: 20px;">
+              <el-tag effect="dark" type="danger" size="large" style="min-width: 70px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                <el-text size="large"> 发布人无需报名 </el-text>
+              </el-tag>
+            </el-col>
+          </el-row>
           <el-row v-else>
-            <el-col
-                style="display: flex; justify-content: center; padding-top: 20px; padding-bottom: 20px;"
-            >
-              <el-tag
-                  effect="dark"
-                  type="danger"
-                  size="large"
-                  style="min-width: 70px; height: 50px; display: flex; align-items: center; justify-content: center;"
-              >
-                <el-text size="large">
-                  招募已结束
-                </el-text>
+            <el-col style="display: flex; justify-content: center; padding-top: 20px; padding-bottom: 20px;">
+              <el-tag effect="dark" type="danger" size="large" style="min-width: 70px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                <el-text size="large"> 招募已结束 </el-text>
               </el-tag>
             </el-col>
           </el-row>
@@ -278,7 +268,7 @@
         </el-card>
       </el-col>
     </el-row>
-
+    <!-- 报名信息 -->
     <el-dialog v-model="showDialog" title="" width="50%" style="">
       <el-row>
         <el-text size="large" style="font-size: 20px;">
@@ -361,7 +351,6 @@
 </template>
 
 <script setup>
-
 import {computed, onMounted, ref} from "vue";
 import {remainingTime} from "@/utils/parseTime.js";
 import {useRoute} from "vue-router";
@@ -370,16 +359,17 @@ import {HomeFilled, Iphone, Message, User, UserFilled} from "@element-plus/icons
 import {useLoginStore} from "@/stores/login.js";
 import router from "@/router/index.js";
 
+// 当前活动的id
 const route = useRoute()
-const ID = computed(() => {
+const activityID = computed(() => {
   return route.params.id;
 })
-const activity = ref({})
-const showDialog = ref(false); // 弹窗显示状态
 
+// 查询的活动数据
+const activity = ref({})
 onMounted(async () => {
   try {
-    const res = await getActivityDetail({activity_id: ID.value})
+    const res = await getActivityDetail({activity_id: activityID.value})
     if (res.data.label === 200) {
       activity.value = res.data.data
     } else {
@@ -389,10 +379,44 @@ onMounted(async () => {
     alert("获取活动详情失败")
   }
 })
-
+// 计算活动剩余天数
 const rTime = computed(() => {
   return remainingTime(new Date(activity.value.registrationDeadline))
 })
+
+// 左侧参与信息是否展示
+const showParticipant = computed(() => {
+  // 是否是发布者
+  if (activity.value.is_publisher === 1) {
+    return 1
+  }
+  // 活动是否已结束
+  if (activity.value.activityStatus === 2 && rTime.value > 0) {
+    return 0
+  }
+  return 2
+})
+
+// 报名按钮是否展示
+const JoinButton = () => {
+  // 活动已结束
+  if (rTime.value === 0) {
+    return true
+  }
+  // 活动已经结束
+  if (activity.value.activityStatus !== 2) {
+    return true
+  }
+  // 已经报名
+  if (activity.value.participateStatus === 1 || activity.value.participateStatus === 2) {
+    return true
+  }
+  // 不符合报名限制
+  if (activity.value.isCompliance === 0) {
+    return true
+  }
+  return false
+}
 
 // 报名信息界面
 const participants = () => {
@@ -405,6 +429,8 @@ const participants = () => {
   showDialog.value = true;
 }
 
+// 报名验证界面
+const showDialog = ref(false);
 const stuInfo = ref({
   name: "test",
   id: "test",
@@ -414,8 +440,7 @@ const stuInfo = ref({
 })
 const initStuInfo = async () => {
   try {
-    // TODO: 修改为当前的登录用户
-    const res = await getStuInfo({id: 1})
+    const res = await getStuInfo()
     if (res.data.label === 200) {
       stuInfo.value = res.data.data
     } else {
@@ -425,21 +450,18 @@ const initStuInfo = async () => {
     alert("获取学生信息失败")
   }
 }
-
 // 提交表单逻辑
-const submitForm = () => {
-
-  participate()
+const submitForm = async () => {
+  await participate()
   showDialog.value = false; // 关闭弹窗
 };
 const participate = async() => {
   try {
     const res = await participateActivity({
-      activity_id: ID.value,
-      // TODO: 修改为当前的登录用户
-      id: 1
+      activity_id: activityID.value,
     })
     if (res.data.label === 200) {
+      activity.value.participateStatus = 1
       alert("报名成功")
     } else {
       alert("报名失败")
@@ -450,11 +472,7 @@ const participate = async() => {
 }
 
 function isAuthenticated() {
-  const studentStore = useLoginStore();
-  const { token } = studentStore.data;
-  if (!token) return false;
-
-  return true;
+  return useLoginStore().data.token
 }
 </script>
 

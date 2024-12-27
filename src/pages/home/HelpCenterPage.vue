@@ -60,23 +60,26 @@ import {
   Setting, More,
 } from '@element-plus/icons-vue'
 import {shallowRef} from "vue";
-import problem from "@/components/home/Problem.vue";
+import problem from "@/components/help/Problem.vue";
+import useGuide from '@/components/help/UseGuide.vue'
+import dataDownload from "@/components/help/DataDownload.vue";
+import contactUs from '@/components/help/ContactUs.vue'
 
+// 当前组件
 const currentComponent = shallowRef(problem);
-
 const handleSelect = (index) => {
   switch (index) {
     case "1":
       currentComponent.value = problem;
       break;
     case "2":
-      currentComponent.value = null;
+      currentComponent.value = dataDownload;
       break;
     case "3":
-      currentComponent.value = null;
+      currentComponent.value = useGuide;
       break;
     case "4":
-      currentComponent.value = null;
+      currentComponent.value = contactUs;
       break;
   }
 }
