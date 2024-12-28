@@ -7,11 +7,17 @@
             Bi活动注册
           </el-header>
           <el-main class="register-content">
-            <el-button type="primary" @click="navigateTo('/register/student')">学生注册</el-button>
-            <el-button type="primary" @click="navigateTo('/register/college')">学院注册</el-button>  
+            <el-button plain @click="navigateTo('/register/student')" class="register-button">
+              <el-icon><UserFilled /></el-icon>
+              学生注册
+            </el-button>
+            <el-button plain @click="navigateTo('/register/college')" class="register-button">
+              <el-icon><School /></el-icon>
+              学院注册
+            </el-button>  
           </el-main>
           <el-footer class="register-footer">
-            <el-link target="_blank" @click="navigateTo('/login')">已有账号？点击登录</el-link>
+            <el-link type="primary" target="_blank" @click="navigateTo('/login')">已有账号？点击登录</el-link>
           </el-footer>
         </el-container>
       </div>
@@ -33,12 +39,25 @@ function navigateTo(path) {
 /* 自定义按钮大小 */
 #registerDefaultPage .el-button {
   padding: 80px 100px;  /* 自定义按钮内边距 */
-  font-size: 18px;     /* 自定义字体大小 */
+  font-size: 24px;     /* 自定义字体大小 */
+  font-weight: bold;   
+  margin: 20px;       
+  background-color: rgb(253, 253, 253);
+  border: 1px solid #b3b3b3;
+}
+
+#registerDefaultPage .el-button:hover {
+  border-color: #409eff;
+  border-width: 1px;
+}
+
+.register-content{
+  display: flex;
 }
 
 .register-header {
   text-align: center;
-  font-size: 24px;
+  font-size: 30px;
   color: #303133;
 }
 .register-footer{
