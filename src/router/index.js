@@ -57,6 +57,10 @@ const routes = [
       {
         path: 'college', // 学院登录
         component: import("@/pages/login/CollegeLoginPage.vue")
+      },
+      {
+        path: 'admin', // 管理员登录
+        component: import("@/pages/login/AdminLoginPage.vue")
       }
     ]
   },
@@ -201,6 +205,12 @@ const routes = [
       }
     ],
     meta: {requiresAuth: true, role: 'college'}
+  },
+  // 管理员相关路由
+  {
+    path: "/admin",
+    component: () => import("@/pages/admin/AdminPage.vue"),
+    meta: {requiresAuth: true, role: 'admin'}
   }
 ]
 

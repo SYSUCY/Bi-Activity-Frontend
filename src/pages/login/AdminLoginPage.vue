@@ -1,15 +1,9 @@
 <template>
-  <div id="collegeLoginPage">
+  <div id="adminLoginPage">
     <el-container class="login-container">
       <el-header class="login-header">
-        <span>
-          <el-icon><School /></el-icon>
-          学院登录
-        </span>
-        <el-link type="primary" @click="navigateTo('/login/student')">
-          <el-icon><UserFilled /></el-icon>
-          切换学生登录
-        </el-link>
+        <el-icon><Management /></el-icon>
+        管理员登录
       </el-header>
       <el-main>
         <el-form :model="loginForm" :rules="rules" ref="loginFormRef">
@@ -33,17 +27,13 @@
           登录
         </el-button>
       </el-main>
-      <el-footer class="login-footer">
-        <el-link type="primary" @click="navigateTo('/change-password/college')">忘记密码</el-link>
-        <el-link type="primary" @click="navigateTo('/register/college')">还没有账号？点击注册</el-link>
-      </el-footer>
     </el-container>    
   </div>
 </template>
 
 <script setup>
 import { reactive, ref } from "vue";
-import { collegeLogin } from "@/api/login.js";
+import { adminLogin } from "@/api/login.js";
 import { useRouter } from 'vue-router';
 import { useLoginStore } from "@/stores/login.js";
 
@@ -76,13 +66,13 @@ const loginFormRef = ref(null);
 const login = () => {
   loginFormRef.value.validate((valid) => {
     if (valid) {
-      collegeLogin({
+      adminLogin({
         ...loginForm,
-        "role": "college"
+        "role": "admin"
       }).then((response) => {
         const loginStore = useLoginStore();
-        loginStore.loginIn(response.data.data.token, "college")
-        navigateTo('/collegePersonalCenter');
+        loginStore.loginIn(response.data.data.token, "admin")
+        navigateTo('/admin');
       }).catch((err) => {
         console.error(err);
         alert("登录失败，用户名或密码不存在");
@@ -97,11 +87,9 @@ const login = () => {
 <style scoped>
 .login-header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end; /* 使所有内容在垂直方向上对齐 */
-  width: 100%;
+  margin: auto;
   padding: 10px;
-  font-size: 24px;
+  font-size: 28px;
 }
 
 .login-footer {
