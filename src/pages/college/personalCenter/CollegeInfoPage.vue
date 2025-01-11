@@ -42,14 +42,11 @@
 import { reactive, ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus';
 import { Plus } from '@element-plus/icons-vue';
-import axios from 'axios';
-import useCollegeStore from '/src/stores/college.js';
+import myAxios from "@/request";
+
 
 // 需要的变量
-// 后端请求URL
-const apiUrl = import.meta.env.VITE_COLLEGE1;
-// jwt令牌
-const collegeStore = useCollegeStore.data;
+
 // 表单可编辑标记
 const isEditable = ref(false);
 // 用于展示的form表单数据
@@ -89,17 +86,10 @@ const options = [
 ]
 
 // 需要的方法
+// 已优化
 const fetchData = async () => {
   try {
-    const response = await axios.get(`${apiUrl}/collegeInfo`, {
-      params: {
-        id: 1,
-      },
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${collegeStore.token}`,
-      },
-    });
+    const response = await myAxios.get('/college/personalCenter/collegeInfo');
     if (response.status !== 200) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -111,6 +101,7 @@ const fetchData = async () => {
   }
 };
 
+// 已优化
 const updateData = async () => {
   try {
     // 数据预处理
@@ -120,13 +111,7 @@ const updateData = async () => {
     const dataToSend = JSON.parse(JSON.stringify(formb));
     // 发送 POST 请求到后端
     if (!flag) {
-      const response = await axios.post(`${apiUrl}/collegeInfo`, dataToSend, {
-        headers: {
-          'Content-Type': 'application/json',
-          // 如果需要的话，添加其他头部，比如认证令牌
-          // 'Authorization': `Bearer ${yourAuthToken}`
-        }
-      });
+      const response = await myAxios.post('/college/personalCenter/collegeInfo', dataToSend);
       if (response.status !== 200) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -224,5 +209,7 @@ const handleAvatarError = () => {
 
 #college-ci {
   padding: 0;
+  width: 60vw; /* 视口宽度 */
+  height: 100vh; /* 视口高度 */
 }
 </style>
