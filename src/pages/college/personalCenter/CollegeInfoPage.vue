@@ -2,7 +2,9 @@
   <div id="college-ci">
     <el-form :model="formb" label-width="auto" style="max-width: 600px">
       <el-form-item label="学院头像：">
-        <el-upload class="avatar-uploader" :disabled=!isEditable>
+        <el-upload class="avatar-uploader" :disabled=!isEditable action="http://127.0.0.1:8080/college/upload"
+          :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :on-error="handleAvatarError"
+          :show-file-list="false">
           <img v-if="formb.CollegeAvatarUrl" :src="formb.CollegeAvatarUrl" class="avatar" />
           <el-icon v-else class="avatar-uploader-icon">
             <Plus />
@@ -52,23 +54,23 @@ const collegeStore = useCollegeStore.data;
 const isEditable = ref(false);
 // 用于展示的form表单数据
 const formb = reactive({
-    ID: '',
-    CollegeAccount: '',
-    CollegeName: '',
-    Campus: '',
-    CollegeAddress: '',
-    CollegeIntroduction: '',
-    CollegeAvatarUrl: ''
+  ID: '',
+  CollegeAccount: '',
+  CollegeName: '',
+  Campus: '',
+  CollegeAddress: '',
+  CollegeIntroduction: '',
+  CollegeAvatarUrl: ''
 });
 // 用于备份的form表单数据
 const forma = reactive({
-    ID: '',
-    CollegeAccount: '',
-    CollegeName: '',
-    Campus: '',
-    CollegeAddress: '',
-    CollegeIntroduction: '',
-    CollegeAvatarUrl: ''
+  ID: '',
+  CollegeAccount: '',
+  CollegeName: '',
+  Campus: '',
+  CollegeAddress: '',
+  CollegeIntroduction: '',
+  CollegeAvatarUrl: ''
 });
 // Selector的可取值
 const options = [
@@ -91,7 +93,7 @@ const fetchData = async () => {
   try {
     const response = await axios.get(`${apiUrl}/collegeInfo`, {
       params: {
-        id: 1, 
+        id: 1,
       },
       headers: {
         'Content-Type': 'application/json',
@@ -137,27 +139,57 @@ const updateData = async () => {
 onMounted(fetchData);
 
 const onEdit = () => {
-    isEditable.value = true;
+  isEditable.value = true;
 }
 
 const onSave = async () => {
-    await updateData();
-    await fetchData();
-    isEditable.value = false;
-    ElMessage({
-      message: '已保存.',
-      type: 'success',
-    })
+  await updateData();
+  await fetchData();
+  isEditable.value = false;
+  ElMessage({
+    message: '已保存.',
+    type: 'success',
+  })
 }
 
 const onCancel = () => {
-    Object.assign(formb, forma);
-    isEditable.value = false;
-    ElMessage({
-      message: '已取消.',
-      type: 'success',
-    })
+  Object.assign(formb, forma);
+  isEditable.value = false;
+  ElMessage({
+    message: '已取消.',
+    type: 'success',
+  })
 }
+// 文件上传相关
+
+const beforeAvatarUpload = (file) => {
+  const isJPG = file.type === 'image/jpeg';
+  const isPNG = file.type === 'image/png';
+  const isLt2M = file.size / 1024 / 1024 < 2;
+
+  if (!isJPG && !isPNG) {
+    alert('上传头像图片只能是 JPG/PNG 格式!');
+    return false;
+  }
+  if (!isLt2M) {
+    alert('上传头像图片大小不能超过 2MB!');
+    return false;
+  }
+  return true;
+};
+
+const handleAvatarSuccess = (response, file) => {
+  alert(response.data)
+  if (response.label === 200) {
+    formb.CollegeAvatarUrl = response.data;
+  } else {
+    alert('上传失败：' + response.msg);
+  }
+};
+
+const handleAvatarError = () => {
+  alert('上传失败，请重试');
+};
 </script>
 
 <style scoped>
