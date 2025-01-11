@@ -8,7 +8,7 @@
           router
         >
           <el-menu-item index="/admin/college-management">
-            <el-icon><Management /></el-icon>
+            <el-icon><School /></el-icon>
             <template #title>学院账号管理</template>
           </el-menu-item>
           <el-menu-item index="/admin/activity-management">
@@ -16,20 +16,20 @@
             <template #title>活动类型管理</template>
           </el-menu-item>
           <el-menu-item index="/admin/website-image-management">
-            <el-icon><Management /></el-icon>
+            <el-icon><Picture /></el-icon>
             <template #title>网站形象管理</template>
           </el-menu-item>
           <el-menu-item index="/admin/help-center-management">
-            <el-icon><Connection /></el-icon>
+            <el-icon><Help /></el-icon>
             <template #title>帮助中心管理</template>
           </el-menu-item>
           <el-menu-item index="/admin/security-settings">
-            <el-icon><Search /></el-icon>
+            <el-icon><Setting /></el-icon>
             <template #title>安全设置</template>
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-main>
+      <el-main class="main">
         <router-view />
       </el-main>
     </el-container>
