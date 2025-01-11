@@ -250,7 +250,7 @@ const handleChange = (file) => {
   reader.readAsDataURL(file.raw);
 };
 
-const imageUpload = () => {
+const imageUpload = async() => {
   try { 
     console.log('开始上传文件:', handIDCardFile.value)  
 
@@ -258,7 +258,7 @@ const imageUpload = () => {
     formData.append('file', handIDCardFile.value)
     
     console.log('发送请求...')
-    const { data: res } = myAxios.post(
+    const { data: res } = await myAxios.post(
       '/api/studentPersonalCenter/image/upload', 
       formData,
       {
@@ -303,7 +303,7 @@ const phoneCountdown = ref(60);
 let phoneTimer = null;
 
 const handleSendPhoneCode = async () => {
-  if(form.adminPhone.length ===0){
+  if(form.adminPhone.length === 0){
     ElMessage.error('请输入手机号码');
     return 
   }

@@ -65,6 +65,19 @@
           </template>
         </el-dropdown>
       </template>
+      <template v-else-if="role === 'admin'">
+        <el-dropdown @command="handleAdminDropdownCommand">
+          <span class="el-dropdown-link">
+            <img :src="userAvatar" alt="管理员头像" class="user-avatar" />
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="personalCenter">个人中心</el-dropdown-item>
+              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </template>
     </div>
   </div>
 </template>
@@ -96,6 +109,16 @@ const handleStudentDropdownCommand = (command) => {
 const handleCollegeDropdownCommand = (command) => {
   if (command === 'personalCenter') {
     router.push('/collegePersonalCenter');
+  } else if (command === 'logout') {
+    loginStore.loginOut();
+    router.push({ path: '/login', replace: true });
+  }
+};
+
+// 处理管理员头像下拉菜单命令
+const handleAdminDropdownCommand = (command) => {
+  if (command === 'personalCenter') {
+    router.push('/admin');
   } else if (command === 'logout') {
     loginStore.loginOut();
     router.push({ path: '/login', replace: true });
