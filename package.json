@@ -9,14 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@element-plus/icons-vue": "^2.3.1",
-=======
     "ali-oss": "^6.22.0",
->>>>>>> 5300737cfdaed106f62dd9ba7339e5c94adb4bb0
     "axios": "^1.7.9",
     "element-plus": "^2.9.0",
-    "jwt-decode": "^4.0.0",
     "pinia": "^2.3.0",
     "pinia-plugin-persistedstate": "^4.1.3",
     "vue": "^3.5.13",
@@ -24,7 +19,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
-    "sass-embedded": "^1.82.0",
     "vite": "^6.0.1"
   }
 }
