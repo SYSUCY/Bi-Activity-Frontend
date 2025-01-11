@@ -210,6 +210,28 @@ const routes = [
   {
     path: "/admin",
     component: () => import("@/pages/admin/AdminPage.vue"),
+    children: [
+      {
+        path: 'college-management',
+        component: () => import('@/components/admin/CollegeManagement.vue')
+      },
+      {
+        path: 'activity-management',
+        component: () => import('@/components/admin/ActivityManagement.vue')
+      },
+      {
+        path: 'website-image-management',
+        component: () => import('@/components/admin/WebImageManagement.vue')
+      },
+      {
+        path: 'help-center-management',
+        component: () => import('@/components/admin/HelpCenterManagement.vue')
+      },
+      {
+        path: 'security-settings',
+        component: () => import('@/components/admin/SecuritySettings.vue')
+      }
+    ],
     meta: {requiresAuth: true, role: 'admin'}
   }
 ]
