@@ -63,7 +63,7 @@
                 :show-file-list="false"
                 :auto-upload="false"
               >
-                <el-button size="large">上传身份证照</el-button>
+                <el-button size="large">+</el-button>
               </el-upload>
               <div v-if="imageUrl">
                 <img :src="imageUrl" alt="手持身份证照" style="max-width: 200px; max-height: 300px;"/>

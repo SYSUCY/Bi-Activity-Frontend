@@ -166,6 +166,7 @@ const typeList = ref([]);
 onMounted(async () => {
   try {
     const res = await getActivityTypeList();
+    console.log(res.data)
     if (res.data.label === 200) {
       typeList.value = res.data.data;
     } else {
