@@ -147,6 +147,7 @@
 import { ref, reactive, onMounted, onBeforeUnmount } from 'vue';
 import { ElMessage } from 'element-plus';
 import myAxios from '@/request';
+import { getNameToAccount } from '@/api/register';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 function navigateTo(path) {
@@ -206,13 +207,14 @@ const rules = {
 const collegeOptions = ref([])
 
 // 页面加载时获取学院数据
-const fetchCollegeData = () => {
-  myAxios.get('/register/college/name_to_account').then((response) => {
-    const { data } = response.data
-    collegeOptions.value = data || []
-  }).catch(() => {
-    ElMessage.error('学院数据加载失败！')
-  })
+const fetchCollegeData = async () => {
+  const res = await getNameToAccount();
+  console.log('学院数据:', res.data)
+  if (res.data.label === 200) {
+    collegeOptions.value = res.data.data;
+  } else {
+    ElMessage.error('学院数据加载失败！');
+  }
 }
 
 // 学院名称选择后填充账号
