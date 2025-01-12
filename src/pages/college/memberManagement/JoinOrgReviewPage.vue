@@ -9,16 +9,21 @@
   </div>
 
   <div>
-    <el-table :data="tableData" height="375" style="width: 100%">
+    <el-table :data="tableData" height="100vh" style="width: 100%">
       <el-table-column prop="StudentName" label="姓名" width="180" />
       <el-table-column prop="StudentID" label="学号" width="180" />
-      <el-table-column prop="UpdatedAt" :label="dateLabel" width="180" />
-      <el-table-column prop="Status" label="状态">
+      <!-- <el-table-column prop="UpdatedAt" :label="dateLabel" width="180" /> -->
+      <el-table-column prop="UpdatedAt" :label="dateLabel" width="180">
+        <template #default="scope">
+          {{ formatDate(scope.row.UpdatedAt) }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="Status" label="状态" width="180">
         <template #default="scope">
           <el-tag :type="getTagType(scope.row.Status)">{{ getTagLabel(scope.row.Status) }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" min-width="120" v-if="showActionButtons">
+      <el-table-column fixed="right" label="操作" width="180" v-if="showActionButtons">
         <template #default="scope" v-if="showActionButtons">
           <el-button link type="primary" size="small" @click.prevent="audit(scope.$index, 2)">
             通过
@@ -32,27 +37,15 @@
   </div>
 
   <div class="pagination-block">
-    <el-pagination
-      v-model:current-page="currentPage"
-      v-model:page-size="pageSize"
-      :page-sizes="pageSizes"
-      :size="size"
-      :disabled="disabled"
-      :background="background"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-    />
+    <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" :page-sizes="pageSizes" :size="size"
+      :disabled="disabled" :background="background" layout="total, sizes, prev, pager, next, jumper" :total="total" />
   </div>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
-import useCollegeStore from '/src/stores/college.js';
-import axios from 'axios';
-// 后端请求URL
-const apiUrl = import.meta.env.VITE_COLLEGE2;
-// jwt令牌
-const collegeStore = useCollegeStore.data;
+import myAxios from "@/request";
+
 
 // 表
 // 默认选中的radio1按钮值
@@ -108,13 +101,13 @@ const statusMap = {
   '已移出': 4
 };
 
+// 已优化
 const fetchData = async () => {
   // alert("我被调用了")
   try {
-    const response = await axios.get(`${apiUrl}/audit`, {
+    const response = await myAxios.get('/college/memberManagement/audit', {
       params: {
-        id: 1,
-        status: statusMap[radio.value], // 假设后端需要状态参数
+        status: statusMap[radio.value],
         page: currentPage.value,
         size: pageSize.value
       }
@@ -131,17 +124,12 @@ const fetchData = async () => {
 
 watch([currentPage, pageSize, radio], fetchData, { immediate: true }); // 立即执行一次，以便在组件加载时获取数据
 
+// 已优化
 const updateData = async (r) => {
   try {
     const dataToSend = JSON.parse(JSON.stringify(r));
     // 发送 POST 请求到后端
-    const response = await axios.post(`${apiUrl}/audit`, dataToSend, {
-      headers: {
-        'Content-Type': 'application/json',
-        // 如果需要的话，添加其他头部，比如认证令牌
-        // 'Authorization': `Bearer ${yourAuthToken}`
-      }
-    });
+    const response = await myAxios.post('/college/memberManagement/audit', dataToSend);
     if (response.status !== 200) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -160,4 +148,16 @@ const audit = async (index, s) => {
   await updateData(r);
   await fetchData();
 }
+
+// 时间显示格式
+const formatDate = (date) => {
+  if (!date) return '';
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hour = String(d.getHours()).padStart(2, '0');
+  const minute = String(d.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hour}:${minute}`;
+};
 </script>
