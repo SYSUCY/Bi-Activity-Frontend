@@ -21,10 +21,15 @@
   </div>
 
   <div>
-    <el-table :data="tableData" height="350" style="width: 100%">
+    <el-table :data="tableData" height="100vh" style="width: 100%">
       <el-table-column prop="StudentName" label="姓名" width="180" />
       <el-table-column prop="StudentId" label="学号" width="180" />
-      <el-table-column prop="UpdatedAt" label="加入时间" />
+      <!-- <el-table-column prop="UpdatedAt" label="加入时间" /> -->
+      <el-table-column prop="UpdatedAt" label="加入时间" width="180">
+        <template #default="scope">
+          {{ formatDate(scope.row.UpdatedAt) }}
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" min-width="120">
         <template #default="scope">
           <el-button link type="primary" size="small" @click.prevent="remove(scope.$index)">
@@ -52,13 +57,7 @@
 
 <script setup>
 import { ref, reactive, watch, onMounted } from 'vue';
-import axios from 'axios';
-import useCollegeStore from '/src/stores/college.js';
-
-// 后端请求URL
-const apiUrl = import.meta.env.VITE_COLLEGE2;
-// jwt令牌
-const collegeStore = useCollegeStore.data;
+import myAxios from "@/request";
 
 // 查询条件
 const formData = reactive({
@@ -84,13 +83,13 @@ const handleDateChange = (value) => {
   }
 };
 
+// 已优化
 const fetchData = async () => {
   console.log("我在这儿")
   console.log(formData.DateRange[0])
   try {
-    const response = await axios.get(`${apiUrl}/query`, {
+    const response = await myAxios.get('/college/memberManagement/query', {
       params: {
-        id: 1,
         page: currentPage.value,
         size: pageSize.value,
         studentName: formData.StudentName,
@@ -109,11 +108,11 @@ const fetchData = async () => {
   }
 };
 
+// 已优化
 const updateData = async (index) => {
   try {
-    const response = await axios.delete(`${apiUrl}/delete`, {
+    const response = await myAxios.delete('/college/memberManagement/delete', {
       params: {
-        collegeId: 1,
         studentId: tableData.value[index].StudentId,
       },
     });
@@ -143,6 +142,18 @@ const clear = () => {
   formData.StudentID = '';
   formData.DateRange = ['', ''];
 }
+
+// 时间显示格式
+const formatDate = (date) => {
+  if (!date) return '';
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hour = String(d.getHours()).padStart(2, '0');
+  const minute = String(d.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hour}:${minute}`;
+};
 </script>
 
 <style>

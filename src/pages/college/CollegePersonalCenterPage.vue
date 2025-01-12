@@ -113,4 +113,10 @@ onBeforeMount(() => {
   height: 100%;
   right: 20px;
 }
+
+.am-layout-container {
+  padding: 0;
+  width: 100vw; /* 视口宽度 */
+  height: 100vh; /* 视口高度 */
+}
 </style>
