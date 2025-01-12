@@ -8,13 +8,28 @@
   </div>
 
   <div>
-    <el-table :data="tableData" height="375" style="width: 100%">
-      <el-table-column prop="ActivityName" label="活动名称" width="120" />
-      <el-table-column prop="StartTime" label="开始时间" width="120" />
-      <el-table-column prop="EndTime" label="结束时间" width="120" />
-      <el-table-column prop="ActivityAddress" label="活动地点" width="120" />
-      <el-table-column prop="Organizer" label="发起人" width="120" />
-      <el-table-column prop="ApplicationTime" :label="dateLabel" width="120" />
+    <el-table :data="tableData" height="100vh" style="width: 100%">
+      <el-table-column prop="ActivityName" label="活动名称" width="150" />
+      <!-- <el-table-column prop="StartTime" label="开始时间" width="150" /> -->
+      <el-table-column prop="StartTime" label="开始时间" width="150">
+        <template #default="scope">
+          {{ formatDate(scope.row.StartTime) }}
+        </template>
+      </el-table-column>
+      <!-- <el-table-column prop="EndTime" label="结束时间" width="150" /> -->
+      <el-table-column prop="EndTime" label="结束时间" width="150">
+        <template #default="scope">
+          {{ formatDate(scope.row.EndTime) }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="ActivityAddress" label="活动地点" width="150" />
+      <el-table-column prop="Organizer" label="发起人" width="150" />
+      <!-- <el-table-column prop="ApplicationTime" :label="dateLabel" width="120" /> -->
+      <el-table-column prop="ApplicationTime" :label="dateLabel" width="150">
+        <template #default="scope">
+          {{ formatDate(scope.row.ApplicationTime) }}
+        </template>
+      </el-table-column>
       <el-table-column prop="Status" label="状态">
         <template #default="scope">
           <el-tag :type="getTagType(scope.row.Status)">{{ getTagLabel(scope.row.Status) }}</el-tag>
@@ -49,12 +64,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import useCollegeStore from '/src/stores/college.js';
-import axios from 'axios';
-// 后端请求URL
-const apiUrl = import.meta.env.VITE_COLLEGE3;
-// jwt令牌
-const collegeStore = useCollegeStore.data;
+import myAxios from '@/request';
 
 // 表
 // 默认选中的radio1按钮值
@@ -111,9 +121,8 @@ const statusMap = {
 const fetchData = async () => {
   // alert("我被调用了")
   try {
-    const response = await axios.get(`${apiUrl}/activity`, {
+    const response = await myAxios.get('/college/activityManagement/activity', {
       params: {
-        id: 1,
         status: statusMap[radio.value],
         page: currentPage.value,
         size: pageSize.value
@@ -135,13 +144,7 @@ const updateData = async (r) => {
   try {
     const dataToSend = JSON.parse(JSON.stringify(r));
     // 发送 POST 请求到后端
-    const response = await axios.post(`${apiUrl}/activity`, dataToSend, {
-      headers: {
-        'Content-Type': 'application/json',
-        // 如果需要的话，添加其他头部，比如认证令牌
-        // 'Authorization': `Bearer ${yourAuthToken}`
-      }
-    });
+    const response = await myAxios.post('/college/activityManagement/activity', dataToSend);
     if (response.status !== 200) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -158,6 +161,18 @@ const audit = async (index, s) => {
   await updateData(r);
   await fetchData();
 }
+
+// 时间显示格式
+const formatDate = (date) => {
+  if (!date) return '';
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hour = String(d.getHours()).padStart(2, '0');
+  const minute = String(d.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hour}:${minute}`;
+};
 </script>
 
 <style>
