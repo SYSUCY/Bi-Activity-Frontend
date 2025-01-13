@@ -226,7 +226,7 @@ onMounted(() => {
 const handleUpdateAvatar = async (imageId) => {
   try {
     const { data: res } = await myAxios.put(
-      `/api/studentPersonalCenter/studentPersonalInfo/${studentStore.data.id}`,
+      '/api/studentPersonalCenter/studentPersonalInfo',
       {
         student_avatar_id: imageId
       }

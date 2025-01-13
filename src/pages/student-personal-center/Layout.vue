@@ -7,7 +7,7 @@
           alt="用户头像" 
           class="avatar" 
         />
-        <p class="username">张三</p>
+        <p class="username">{{ userInfo.name }}</p>
       </div>
       <ul>
         <li><router-link to="/studentPersonalCenter/personalInfo">个人资料</router-link></li>
