@@ -19,10 +19,6 @@
             <el-icon><Picture /></el-icon>
             <template #title>网站形象管理</template>
           </el-menu-item>
-          <el-menu-item index="/admin/help-center-management">
-            <el-icon><Help /></el-icon>
-            <template #title>帮助中心管理</template>
-          </el-menu-item>
           <el-menu-item index="/admin/security-settings">
             <el-icon><Setting /></el-icon>
             <template #title>安全设置</template>
