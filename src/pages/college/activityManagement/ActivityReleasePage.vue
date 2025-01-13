@@ -8,43 +8,34 @@
       class="publish-form"
     >
       <!-- 基本信息 -->
-      <el-form-item label="活动名称" prop="activity_name">
-        <el-input v-model="form.activity_name" placeholder="请输入活动名称" />
+      <el-form-item label="活动名称" prop="ActivityName">
+        <el-input v-model="form.ActivityName" placeholder="请输入活动名称" />
       </el-form-item>
-      
-      <!-- 默认为2：学院活动 -->
-      <!-- <el-form-item label="活动性质" prop="activity_nature">
-        <el-select v-model="form.activity_nature" placeholder="请选择活动性质">
-          <el-option label="校级活动" :value="1" />
-          <el-option label="院级活动" :value="2" />
-          <el-option label="社团活动" :value="3" />
-        </el-select>
-      </el-form-item> -->
 
-      <el-form-item label="活动类型" prop="activity_type_id">
-        <el-select v-model="form.activity_type_id" placeholder="请选择活动类型">
+      <el-form-item label="活动类型" prop="ActivityTypeID">
+        <el-select v-model="form.ActivityTypeID" placeholder="请选择活动类型">
           <el-option label="文体活动" :value="1" />
           <el-option label="学术讲座" :value="2" />
           <el-option label="志愿服务" :value="3" />
         </el-select>
       </el-form-item>
 
-      <el-form-item label="活动地址" prop="activity_address">
-        <el-input v-model="form.activity_address" placeholder="请输入活动地址" />
+      <el-form-item label="活动地址" prop="ActivityAddress">
+        <el-input v-model="form.ActivityAddress" placeholder="请输入活动地址" />
       </el-form-item>
 
-      <el-form-item label="活动简介" prop="activity_introduction">
+      <el-form-item label="活动简介" prop="ActivityIntroduction">
         <el-input 
-          v-model="form.activity_introduction" 
+          v-model="form.ActivityIntroduction" 
           type="textarea" 
           rows="3"
           placeholder="请输入活动简介" 
         />
       </el-form-item>
 
-      <el-form-item label="活动内容" prop="activity_content">
+      <el-form-item label="活动内容" prop="ActivityContent">
         <el-input 
-          v-model="form.activity_content" 
+          v-model="form.ActivityContent" 
           type="textarea" 
           rows="5"
           placeholder="请输入活动内容" 
@@ -52,100 +43,87 @@
       </el-form-item>
 
       <!-- 时间设置 -->
-      <el-form-item label="活动日期" prop="activity_date">
+      <el-form-item label="活动日期" prop="ActivityDate">
         <el-date-picker
-          v-model="form.activity_date"
+          v-model="form.ActivityDate"
           type="date"
           placeholder="选择活动日期"
         />
       </el-form-item>
 
-      <el-form-item label="活动时间" prop="activity_time">
+      <el-form-item label="活动时间" prop="ActivityTime">
         <el-col :span="11">
           <el-time-picker
-            v-model="form.start_time"
+            v-model="form.StartTime"
             placeholder="开始时间"
           />
         </el-col>
         <el-col :span="2" class="text-center">-</el-col>
         <el-col :span="11">
           <el-time-picker
-            v-model="form.end_time"
+            v-model="form.EndTime"
             placeholder="结束时间"
           />
         </el-col>
       </el-form-item>
 
       <!-- 报名设置 -->
-      <el-form-item label="招募人数" prop="recruitment_number">
+      <el-form-item label="招募人数" prop="RecruitmentNumber">
         <el-input-number 
-          v-model="form.recruitment_number" 
+          v-model="form.RecruitmentNumber" 
           :min="1" 
           :max="999"
         />
       </el-form-item>
 
-      <el-form-item label="报名限制" prop="registration_restrictions">
-        <el-select v-model="form.registration_restrictions" placeholder="请选择报名限制">
+      <el-form-item label="报名限制" prop="RegistrationRestrictions">
+        <el-select v-model="form.RegistrationRestrictions" placeholder="请选择报名限制">
           <el-option label="不限制" :value="1" />
           <el-option label="仅本院学生" :value="2" />
           <el-option label="仅本校学生" :value="3" />
         </el-select>
       </el-form-item>
 
-      <el-form-item label="报名要求" prop="registration_requirement">
+      <el-form-item label="报名要求" prop="RegistrationRequirement">
         <el-input 
-          v-model="form.registration_requirement" 
+          v-model="form.RegistrationRequirement" 
           type="textarea" 
           rows="3"
           placeholder="请输入报名要求" 
         />
       </el-form-item>
 
-      <el-form-item label="报名截止时间" prop="registration_deadline">
+      <el-form-item label="报名截止时间" prop="RegistrationDeadline">
         <el-date-picker
-          v-model="form.registration_deadline"
+          v-model="form.RegistrationDeadline"
           type="datetime"
           placeholder="选择报名截止时间"
         />
       </el-form-item>
 
       <!-- 联系人信息 -->
-      <el-form-item label="联系人姓名" prop="contact_name">
-        <el-input v-model="form.contact_name" placeholder="请输入联系人姓名" />
+      <el-form-item label="联系人姓名" prop="ContactName">
+        <el-input v-model="form.ContactName" placeholder="请输入联系人姓名" />
       </el-form-item>
 
-      <el-form-item label="联系人电话" prop="contact_details">
-        <el-input v-model="form.contact_details" placeholder="请输入联系人电话" />
+      <el-form-item label="联系人电话" prop="ContactDetails">
+        <el-input v-model="form.ContactDetails" placeholder="请输入联系人电话" />
       </el-form-item>
 
-      <!-- 活动图片上传 -->
-      <el-form-item label="活动图片" prop="activity_image">
-        <div class="image-upload">
-          <el-upload
-            class="image-uploader"
-            :show-file-list="false"
-            :http-request="customUpload"
-            accept=".jpg,.jpeg,.png"
-            :before-upload="beforeImageUpload"
-          >
-            <img 
-              v-if="form.imageUrl" 
-              :src="form.imageUrl" 
-              class="activity-image" 
-            />
-            <div v-else class="image-placeholder">
-              <el-icon class="image-uploader-icon"><Plus /></el-icon>
-              <span>点击上传活动图片</span>
-            </div>
-          </el-upload>
-          <div class="image-tip">文件大小不超过 2MB</div>
-        </div>
+      <el-form-item label="活动图片：">
+        <el-upload class="avatar-uploader" action="http://127.0.0.1:8080/college/upload"
+          :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :on-error="handleAvatarError"
+          :show-file-list="false">
+          <img v-if="form.ActivityImageUrl" :src="form.ActivityImageUrl" class="avatar" />
+          <el-icon v-else class="avatar-uploader-icon">
+            <Plus />
+          </el-icon>
+        </el-upload>
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="handleSubmit">发布活动</el-button>
-        <el-button @click="handleReset">重置</el-button>
+        <el-button type="primary" @click="submit">发布活动</el-button>
+        <el-button @click="reset">重置</el-button>
       </el-form-item>
       
     </el-form>
@@ -155,92 +133,80 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import { ElMessage } from 'element-plus'
-// import { useLoginStore } from '@/stores/login'
-// import myAxios from '@/request'
-import axios from 'axios'
+import myAxios from '@/request'
 import { Plus } from '@element-plus/icons-vue'
 
-// const studentStore = useLoginStore()
-const apiUrl = import.meta.env.VITE_COLLEGE3;
 const formRef = ref(null)
 
-// 表单数据
 const form = reactive({
-  activity_name: '',
-  activity_nature: 2,
-  activity_type_id: '',
-  activity_address: '',
-  activity_introduction: '',
-  activity_content: '',
-  activity_date: '',
-  start_time: '',
-  end_time: '',
-  recruitment_number: 1,
-  registration_restrictions: '',
-  registration_requirement: '',
-  registration_deadline: '',
-  contact_name: '',
-  contact_details: '',
-  activity_publisher_id: 1, // 设置发布者ID为当前登录学生ID
-  activity_status: 1, // 1表示审核中状态
-  imageUrl: '',
-  activity_image_id: null,
+	ActivityName: '',
+	ActivityTypeID: null,
+	ActivityAddress: '',
+	ActivityIntroduction: '',
+	ActivityContent: '',
+	ActivityImageUrl: '',
+	ActivityDate: '',
+	StartTime: '',
+	EndTime: '',
+	RecruitmentNumber: 1,
+	RegistrationRestrictions: '',
+	RegistrationRequirement: '',
+	RegistrationDeadline: '',
+	ContactName: '',
+	ContactDetails: ''
 })
 
 // 表单验证规则
 const rules = {
-  activity_name: [
+  ActivityName: [
     { required: true, message: '请输入活动名称', trigger: 'blur' },
     { min: 2, max: 50, message: '长度在 2 到 50 个字符', trigger: 'blur' }
   ],
-  activity_nature: [
-    { required: true, message: '请选择活动性质', trigger: 'change' }
-  ],
-  activity_type_id: [
+  ActivityTypeID: [
     { required: true, message: '请选择活动类型', trigger: 'change' }
   ],
-  activity_address: [
+  ActivityAddress: [
     { required: true, message: '请输入活动地址', trigger: 'blur' }
   ],
-  activity_introduction: [
+  ActivityIntroduction: [
     { required: true, message: '请输入活动简介', trigger: 'blur' }
   ],
-  activity_content: [
+  ActivityContent: [
     { required: true, message: '请输入活动内容', trigger: 'blur' }
   ],
-  activity_date: [
+  ActivityDate: [
     { required: true, message: '请选择活动日期', trigger: 'change' }
   ],
-  start_time: [
+  StartTime: [
     { required: true, message: '请选择开始时间', trigger: 'change' }
   ],
-  end_time: [
+  EndTime: [
     { required: true, message: '请选择结束时间', trigger: 'change' }
   ],
-  recruitment_number: [
+  RecruitmentNumber: [
     { required: true, message: '请输入招募人数', trigger: 'change' }
   ],
-  registration_restrictions: [
+  RegistrationRestrictions: [
     { required: true, message: '请选择报名限制', trigger: 'change' }
   ],
-  registration_requirement: [
+  RegistrationRequirement: [
     { required: true, message: '请输入报名要求', trigger: 'blur' }
   ],
-  registration_deadline: [
+  RegistrationDeadline: [
     { required: true, message: '请选择报名截止时间', trigger: 'change' }
   ],
-  contact_name: [
+  ContactName: [
     { required: true, message: '请输入联系人姓名', trigger: 'blur' },
     { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
   ],
-  contact_details: [
+  ContactDetails: [
     { required: true, message: '请输入联系人电话', trigger: 'blur' },
     { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号码', trigger: 'blur' }
   ]
 }
 
 // 提交表单
-const handleSubmit = async () => {
+const submit = async () => {
   if (!formRef.value) return
 
   try {
@@ -249,17 +215,16 @@ const handleSubmit = async () => {
     // 格式化日期和时间
     const formData = {
       ...form,
-      activity_date: formatDateTime(form.activity_date),
-      start_time: formatDateTime(form.start_time),
-      end_time: formatDateTime(form.end_time),
-      registration_deadline: formatDateTime(form.registration_deadline)
+      ActivityDate: formatDateTime(form.ActivityDate),
+      StartTime: formatDateTime(form.StartTime),
+      EndTime: formatDateTime(form.EndTime),
+      RegistrationDeadline: formatDateTime(form.RegistrationDeadline)
     }
 
-    // await myAxios.post(`/api/studentPersonalCenter/activityManage/${studentStore.data.id}`, formData)
-    await axios.post(`${apiUrl}/activityRelease`, formData)
+    await myAxios.post('/college/activityManagement/activityRelease', formData)
     
     ElMessage.success('活动发布成功')
-    handleReset() // 重置表单
+    reset() // 重置表单
   } catch (error) {
     console.error('发布失败:', error)
     ElMessage.error(error.response?.data?.message || '发布失败，请稍后重试')
@@ -267,7 +232,7 @@ const handleSubmit = async () => {
 }
 
 // 重置表单
-const handleReset = () => {
+const reset = () => {
   if (formRef.value) {
     formRef.value.resetFields()
   }
@@ -279,78 +244,34 @@ const formatDateTime = (date) => {
   return new Date(date).toISOString().slice(0, 19).replace('T', ' ')
 }
 
-// 检查日期时间是否合法
-const validateDateTime = (rule, value, callback) => {
-  if (!value) {
-    callback(new Error(rule.message))
-    return
-  }
-  
-  const currentDate = new Date()
-  const selectedDate = new Date(value)
-  
-  if (selectedDate < currentDate) {
-    callback(new Error('不能选择过去的时间'))
-    return
-  }
-  
-  callback()
-}
+const beforeAvatarUpload = (file) => {
+  const isJPG = file.type === 'image/jpeg';
+  const isPNG = file.type === 'image/png';
+  const isLt2M = file.size / 1024 / 1024 < 2;
 
-// 文件上传前的验证
-const beforeImageUpload = (file) => {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-  const isLt2M = file.size / 1024 / 1024 < 2
-
-  if (!isJpgOrPng) {
-    ElMessage.error('活动图片只能是 JPG 或 PNG 格式!')
-    return false
+  if (!isJPG && !isPNG) {
+    alert('上传头像图片只能是 JPG/PNG 格式!');
+    return false;
   }
   if (!isLt2M) {
-    ElMessage.error('图片大小不能超过 2MB!')
-    return false
+    alert('上传头像图片大小不能超过 2MB!');
+    return false;
   }
-  return true
-}
+  return true;
+};
 
-// 自定义上传方法
-const customUpload = async (options) => {
-  try {
-    const formData = new FormData()
-    formData.append('file', options.file)
-    
-    // const { data: res } = await myAxios.post(
-    //   '/api/studentPersonalCenter/image/upload', 
-    //   formData,
-    //   {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data'
-    //     }
-    //   }
-    // )
-
-    const { data: res } = await axios.post(
-      'http://127.0.0.1:8080/college/upload', 
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-    )
-
-    if (res.code === 0) {
-      form.imageUrl = res.data.url
-      form.activity_image_id = res.data.id
-      ElMessage.success('图片上传成功')
-    } else {
-      ElMessage.error('上传失败')
-    }
-  } catch (error) {
-    console.error('上传错误:', error)
-    ElMessage.error('上传失败')
+const handleAvatarSuccess = (response, file) => {
+  alert(response.data)
+  if (response.label === 200) {
+    form.ActivityImageUrl = response.data;
+  } else {
+    alert('上传失败：' + response.msg);
   }
-}
+};
+
+const handleAvatarError = () => {
+  alert('上传失败，请重试');
+};
 </script>
 
 <style scoped>
@@ -388,55 +309,30 @@ h1 {
   width: 100%;
 }
 
-.image-upload {
-  text-align: center;
-  max-width: 100%;
+.avatar-uploader .avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
 }
 
-.image-uploader {
-  border: 1px dashed #d9d9d9;
-  border-radius: 8px;
+.avatar-uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  width: 100%;
-  min-height: 200px;
-  max-width: 400px;
-  margin: 0 auto;
-  width: 200px;  
-  height: 200px; 
+  transition: var(--el-transition-duration-fast);
 }
 
-.image-uploader:hover {
-  border-color: #409EFF;
+.avatar-uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
 }
 
-.image-placeholder {
-  width: 100%;
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: #8c939d;
-}
-
-.image-uploader-icon {
+.el-icon.avatar-uploader-icon {
   font-size: 28px;
-  margin-bottom: 8px;
-}
-
-.activity-image {
-  max-width: 100%;
-  width: auto;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-
-.image-tip {
-  font-size: 12px;
-  color: #909399;
-  margin-top: 8px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  text-align: center;
 }
 </style>
