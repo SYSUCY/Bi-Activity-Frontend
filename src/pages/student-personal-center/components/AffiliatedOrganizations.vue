@@ -7,8 +7,24 @@
         </div>
       </template>
       
-      <!-- 当前所属组织信息 -->
-      <div v-if="currentCollege" class="college-info">
+      <!-- 审核中状态 -->
+      <div v-if="auditStatus === 1" class="college-info">
+        <div class="info-row">
+          <span class="label">申请学院：</span>
+          <span class="value">{{ auditCollegeName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">申请状态：</span>
+          <span class="value">正在审核中...</span>
+        </div>
+        <div class="info-row">
+          <span class="label">申请时间：</span>
+          <span class="value">{{ formatDate(auditCreatedAt) }}</span>
+        </div>
+      </div>
+
+      <!-- 已有组织 且不在审核中 -->
+      <div v-else-if="currentCollege" class="college-info">
         <div class="info-row">
           <span class="label">当前所属学院：</span>
           <span class="value">{{ currentCollege.collegeName }}</span>
@@ -23,17 +39,17 @@
         </div>
       </div>
 
-      <!-- 未设置组织时的空状态 -->
+      <!-- 无组织状态 -->
       <el-empty v-else description="暂无归属组织">
         <el-button type="primary" @click="handleChangeCollege">
-          添加组织
+          加入组织
         </el-button>
       </el-empty>
 
       <!-- 选择学院的对话框 -->
       <el-dialog
         v-model="dialogVisible"
-        title="选择归属学院"
+        :title="currentCollege ? '更换组织' : '加入组织'"
         width="30%"
         destroy-on-close
       >
@@ -75,12 +91,31 @@ const collegeList = ref([])
 const form = ref({
   collegeId: ''
 })
+const auditStatus = ref(0)  // 0-无审核 1-审核中 2-审核通过
+const auditCreatedAt = ref(null)
+const auditCollegeId = ref(null)  // 审核中的学院ID
 
 // 生命周期钩子
-onMounted(() => {
-  fetchCurrentCollege()
-  fetchCollegeList()
+onMounted(async () => {
+  await Promise.all([
+    fetchCurrentCollege(),
+    fetchCollegeList(),
+    fetchAuditStatus()
+  ])
 })
+
+// 格式化日期
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return date.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
 
 // 获取当前学院信息
 const fetchCurrentCollege = async () => {
@@ -91,13 +126,18 @@ const fetchCurrentCollege = async () => {
         collegeName: response.data.data.college_name
       }
     } else {
-      ElMessage.error(response.data.message || '获取组织信息失败')
-      currentCollege.value = null
+      if (auditStatus.value !== 1) {  // 不在审核中时才清空当前学院
+        currentCollege.value = null
+      }
+      if (response.data.code !== 10102) { // 忽略"学生没有组织归属"的错误提示
+        ElMessage.error(response.data.message || '获取组织信息失败')
+      }
     }
   } catch (error) {
-    ElMessage.error('获取组织信息失败')
     console.error('获取组织信息失败:', error)
-    currentCollege.value = null
+    if (auditStatus.value !== 1) {
+      currentCollege.value = null
+    }
   }
 }
 
@@ -108,20 +148,68 @@ const fetchCollegeList = async () => {
     if (response.data.code === 0) {
       collegeList.value = response.data.data.colleges || []
     } else {
-      ElMessage.error(response.data.message || '获取学院列表信息失败')
+      ElMessage.error(response.data.message || '获取学院列表失败')
     }
   } catch (error) {
-    ElMessage.error('获取学院列表信息失败')
-    console.error('获取学院列表信息失败:', error)
+    console.error('获取学院列表失败:', error)
+    ElMessage.error('获取学院列表失败')
   }
 }
 
-// 显示更换学院对话框
-const handleChangeCollege = () => {
-  dialogVisible.value = true
+// 获取审核状态
+const fetchAuditStatus = async () => {
+  try {
+    const response = await myAxios.get('/api/studentPersonalCenter/affiliatedOrganizations/audit')
+    if (response.data.code === 0) {
+      auditStatus.value = response.data.data.status
+      auditCreatedAt.value = response.data.data.created_at
+      auditCollegeId.value = response.data.data.college_id
+      await updateAuditInfo()  // 获取并更新学院名称
+    } else {
+      auditStatus.value = 0
+      auditCreatedAt.value = null
+      auditCollegeId.value = null
+      auditCollegeName.value = ''
+    }
+  } catch (error) {
+    console.error('获取审核状态失败:', error)
+    auditStatus.value = 0
+    auditCreatedAt.value = null
+    auditCollegeId.value = null
+    auditCollegeName.value = ''
+  }
 }
 
-// 处理退出学院
+// 显示更换/加入学院对话框
+const handleChangeCollege = () => {
+  dialogVisible.value = true
+  form.value.collegeId = ''
+}
+
+// 根据ID获取学院名称
+const getCollegeName = async (collegeId) => {
+  try {
+    const response = await myAxios.get('/api/studentPersonalCenter/affiliatedOrganizations/student')
+    if (response.data.code === 0) {
+      return response.data.data.college_name
+    }
+    return '未知学院'
+  } catch (error) {
+    console.error('获取学院名称失败:', error)
+    return '未知学院'
+  }
+}
+
+// 存储审核中的学院名称
+const auditCollegeName = ref('')
+
+// 更新显示的审核信息
+const updateAuditInfo = async () => {
+  if (auditStatus.value === 1 && auditCollegeId.value) {
+    auditCollegeName.value = await getCollegeName(auditCollegeId.value)
+  }
+}
+
 const handleRemoveCollege = async () => {
   try {
     await ElMessageBox.confirm('确认退出当前归属组织？', '提示', {
@@ -134,18 +222,20 @@ const handleRemoveCollege = async () => {
     if (response.data.code === 0) {
       ElMessage.success('已成功退出组织')
       currentCollege.value = null
+      auditStatus.value = 0
+      auditCreatedAt.value = null
     } else {
       ElMessage.error(response.data.message || '退出组织失败')
     }
   } catch (error) {
     if (error !== 'cancel') {
-      ElMessage.error('退出组织失败')
       console.error('退出组织失败:', error)
+      ElMessage.error('退出组织失败')
     }
   }
 }
 
-// 确认更换学院
+// 确认更换/加入学院
 const confirmChangeCollege = async () => {
   if (!form.value.collegeId) {
     ElMessage.warning('请选择学院')
@@ -153,20 +243,24 @@ const confirmChangeCollege = async () => {
   }
 
   try {
-    const response = await myAxios.put('/api/studentPersonalCenter/affiliatedOrganizations', {
+    const response = await myAxios.post('/api/studentPersonalCenter/affiliatedOrganizations/audit', {
       college_id: form.value.collegeId
     })
 
     if (response.data.code === 0) {
-      ElMessage.success('组织更新成功')
+      ElMessage.success(currentCollege.value ? '更换申请已提交,请等待审核' : '加入申请已提交,请等待审核')
       dialogVisible.value = false
-      await fetchCurrentCollege()
+      // 刷新所有状态
+      await Promise.all([
+        fetchCurrentCollege(),
+        fetchAuditStatus()
+      ])
     } else {
-      ElMessage.error(response.data.message || '更新组织失败')
+      ElMessage.error(response.data.message || '申请提交失败')
     }
   } catch (error) {
-    ElMessage.error('更新组织失败')
-    console.error('更新组织失败:', error)
+    console.error('申请提交失败:', error)
+    ElMessage.error('申请提交失败')
   }
 }
 </script>
