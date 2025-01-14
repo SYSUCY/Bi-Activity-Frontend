@@ -14,19 +14,15 @@
         <el-input v-model="form.activity_name" placeholder="请输入活动名称" />
       </el-form-item>
 
-      <el-form-item label="活动性质" prop="activity_nature">
-        <el-select v-model="form.activity_nature" placeholder="请选择活动性质">
-          <el-option label="校级活动" :value="1" />
-          <el-option label="院级活动" :value="2" />
-          <el-option label="社团活动" :value="3" />
-        </el-select>
-      </el-form-item>
 
       <el-form-item label="活动类型" prop="activity_type_id">
         <el-select v-model="form.activity_type_id" placeholder="请选择活动类型">
-          <el-option label="文体活动" :value="1" />
-          <el-option label="学术讲座" :value="2" />
-          <el-option label="志愿服务" :value="3" />
+          <el-option
+            v-for="type in typeList"
+            :key="type.id"
+            :label="type.typeName"
+            :value="type.id"
+          />
         </el-select>
       </el-form-item>
 
@@ -90,7 +86,6 @@
         <el-select v-model="form.registration_restrictions" placeholder="请选择报名限制">
           <el-option label="不限制" :value="1" />
           <el-option label="仅本院学生" :value="2" />
-          <el-option label="仅本校学生" :value="3" />
         </el-select>
       </el-form-item>
 
@@ -154,9 +149,10 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useLoginStore } from '@/stores/login'
+import {getActivityTypeList} from "@/api/home/home.js";
 import myAxios from '@/request'
 import { Plus } from '@element-plus/icons-vue'
 
@@ -166,7 +162,7 @@ const formRef = ref(null)
 // 表单数据
 const form = reactive({
   activity_name: '',
-  activity_nature: '',
+  activity_nature: 1,
   activity_type_id: '',
   activity_address: '',
   activity_introduction: '',
@@ -339,6 +335,23 @@ const customUpload = async (options) => {
     ElMessage.error('上传失败')
   }
 }
+
+
+// 获取活动类型列表
+const typeList = ref([]);
+onMounted(async () => {
+  try {
+    const res = await getActivityTypeList();
+    console.log(res.data)
+    if (res.data.label === 200) {
+      typeList.value = res.data.data;
+    } else {
+      console.error("Failed to fetch activity type list:", res.data.error);
+    }
+  } catch (error) {
+    console.error("Panic to fetch activity type list:", error);
+  }
+});
 </script>
 
 <style scoped>

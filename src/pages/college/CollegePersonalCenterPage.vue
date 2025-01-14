@@ -1,5 +1,5 @@
 <template>
-  <el-container class="am-layout-container" style="height: 500px">
+  <el-container class="am-layout-container" >
       <el-aside width="200px">
           <el-scrollbar>
               <el-menu :router="true" :default-active="activeIndex">

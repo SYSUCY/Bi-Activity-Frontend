@@ -64,7 +64,7 @@ const forma = reactive({
 const fetchData = async () => {
   try {
     const response = await myAxios.get('/college/personalCenter/adminInfo');
-    if (response.status !== 200) {
+    if (response.data.label !== 200) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = response.data.data;

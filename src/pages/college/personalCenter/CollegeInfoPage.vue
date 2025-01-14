@@ -2,7 +2,7 @@
   <div id="college-ci">
     <el-form :model="formb" label-width="auto" style="max-width: 600px">
       <el-form-item label="学院头像：">
-        <el-upload class="avatar-uploader" :disabled=!isEditable action="http://127.0.0.1:8080/college/upload"
+        <el-upload class="avatar-uploader" :disabled=!isEditable action="http://127.0.0.1:8080/api/studentPersonalCenter/image/upload"
           :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :on-error="handleAvatarError"
           :show-file-list="false">
           <img v-if="formb.CollegeAvatarUrl" :src="formb.CollegeAvatarUrl" class="avatar" />
@@ -87,55 +87,78 @@ const options = [
 
 // 需要的方法
 // 已优化
+// 获取学院资料
 const fetchData = async () => {
   try {
-    const response = await myAxios.get('/college/personalCenter/collegeInfo');
-    if (response.status !== 200) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    const response = await myAxios.get('/api/college/profile');
+    // 检查响应状态和业务状态码
+    if (response.data.code === 0) {
+      const data = response.data.data;
+      Object.assign(formb, {
+        ID: data.id,
+        CollegeAccount: data.college_account,
+        CollegeName: data.college_name,
+        Campus: data.campus,
+        CollegeAddress: data.college_address,
+        CollegeIntroduction: data.college_introduction,
+        CollegeAvatarUrl: data.college_avatar?.url || ''
+      });
+      console.log()
+      Object.assign(forma, formb);
+    } else {
+      ElMessage.error(response.data.message || '获取数据失败');
     }
-    const data = response.data.data;
-    Object.assign(formb, data);
-    Object.assign(forma, data);
   } catch (error) {
-    console.error('Failed to fetch data: ' + error.message);
+    ElMessage.error('获取数据失败：' + error.message);
   }
 };
 
+
 // 已优化
+// 更新学院资料
 const updateData = async () => {
   try {
     // 数据预处理
     const flag = JSON.stringify(formb) === JSON.stringify(forma);
-    // alert(flag);
-    // 将 reactive 对象转换为普通对象，以便发送
-    const dataToSend = JSON.parse(JSON.stringify(formb));
-    // 发送 POST 请求到后端
     if (!flag) {
-      const response = await myAxios.post('/college/personalCenter/collegeInfo', dataToSend);
-      if (response.status !== 200) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const dataToSend = {
+        college_name: formb.CollegeName,
+        college_account: formb.CollegeAccount,
+        campus: formb.Campus,
+        college_address: formb.CollegeAddress,
+        college_introduction: formb.CollegeIntroduction
+      };
+      
+      const response = await myAxios.put('/api/college/profile', dataToSend);
+      if (response.data.code !== 0) {
+        throw new Error(response.data.message);
       }
     }
   } catch (error) {
-    console.error('Failed to update data: ' + error.message);
+    ElMessage.error(error.message || '更新失败');
+    throw error;
   }
 };
+
+
+
+
 
 onMounted(fetchData);
 
 const onEdit = () => {
   isEditable.value = true;
 }
-
 const onSave = async () => {
-  await updateData();
-  await fetchData();
-  isEditable.value = false;
-  ElMessage({
-    message: '已保存.',
-    type: 'success',
-  })
-}
+  try {
+    await updateData();
+    await fetchData();
+    isEditable.value = false;
+    ElMessage.success('保存成功');
+  } catch (error) {
+    ElMessage.error('保存失败：' + error.message);
+  }
+};
 
 const onCancel = () => {
   Object.assign(formb, forma);
@@ -163,17 +186,26 @@ const beforeAvatarUpload = (file) => {
   return true;
 };
 
-const handleAvatarSuccess = (response, file) => {
-  alert(response.data)
-  if (response.label === 200) {
-    formb.CollegeAvatarUrl = response.data;
+// 头像上传相关
+const handleAvatarSuccess = async (response) => {
+  if (response.code === 0) {
+    try {
+      // 上传成功后，调用更新头像的接口
+      await myAxios.put('/api/college/profile/avatar', {
+        avatar_id: response.data.id
+      });
+      formb.CollegeAvatarUrl = response.data.url;
+      ElMessage.success('头像更新成功');
+    } catch (error) {
+      ElMessage.error('头像更新失败');
+    }
   } else {
-    alert('上传失败：' + response.msg);
+    ElMessage.error(response.message || '上传失败');
   }
 };
 
-const handleAvatarError = () => {
-  alert('上传失败，请重试');
+const handleAvatarError = (err) => {
+  ElMessage.error('上传失败：' + err.message);
 };
 </script>
 

@@ -14,9 +14,12 @@
 
       <el-form-item label="活动类型" prop="ActivityTypeID">
         <el-select v-model="form.ActivityTypeID" placeholder="请选择活动类型">
-          <el-option label="文体活动" :value="1" />
-          <el-option label="学术讲座" :value="2" />
-          <el-option label="志愿服务" :value="3" />
+          <el-option
+            v-for="type in typeList"
+            :key="type.id"
+            :label="type.typeName"
+            :value="type.id"
+          />
         </el-select>
       </el-form-item>
 
@@ -131,9 +134,10 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import myAxios from '@/request'
+import {getActivityTypeList} from "@/api/home/home.js";
 import { Plus } from '@element-plus/icons-vue'
 
 const formRef = ref(null)
@@ -272,6 +276,23 @@ const handleAvatarSuccess = (response, file) => {
 const handleAvatarError = () => {
   alert('上传失败，请重试');
 };
+
+// 获取活动类型列表
+const typeList = ref([]);
+onMounted(async () => {
+  try {
+    const res = await getActivityTypeList();
+    console.log(res.data)
+    if (res.data.label === 200) {
+      typeList.value = res.data.data;
+    } else {
+      console.error("Failed to fetch activity type list:", res.data.error);
+    }
+  } catch (error) {
+    console.error("Panic to fetch activity type list:", error);
+  }
+});
+
 </script>
 
 <style scoped>
