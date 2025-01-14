@@ -18,7 +18,7 @@
         <el-row style="font-size: 20px; padding-top: 10px; white-space: pre-wrap; display: block">
           {{ item.problem }}
         </el-row>
-        <el-row style="margin-top: 10px; word-wrap: break-word; display: block; background-color: #99a9bf">
+        <el-row style="margin-top: 10px; word-wrap: break-word; display: block; background-color: #f3f3f3">
           {{ item.answer }}
         </el-row>
         <el-divider v-if="index !== problemList.length -1"/>

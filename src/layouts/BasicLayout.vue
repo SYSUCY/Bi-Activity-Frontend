@@ -49,9 +49,10 @@
 }
 
 #basicLayout .content {
-  background: linear-gradient(to right, #fefefe, #ffffff);
+  /* background: linear-gradient(to right, #fefefe, #ffffff); */
   padding: 30px 20px;
-  margin-top: 56px;  /* 内容区域顶部间距，避免和固定头部重叠 */
+  margin-top: 56px; 
+  width: 100%;
 }
 
 #basicLayout .register-header {

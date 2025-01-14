@@ -1,8 +1,8 @@
 <template>
   <div id="imageSlider" style="width: 95%; display: block;margin: 0 auto;">
-    <el-carousel :interval="4000" type="card" height="400px">
+    <el-carousel height="250px">
       <el-carousel-item v-for="item in imageSlider" :key="item.id">
-        <img :src="item.url"  :alt="item.fileName"/>
+        <el-image :src="item.url" fit="cover" />
       </el-carousel-item>
     </el-carousel>
   </div>

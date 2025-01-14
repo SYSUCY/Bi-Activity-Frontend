@@ -1,5 +1,5 @@
 <template> 
-  <div id="studentForgetPage">
+  <div id="studentForgetPage" style="height: 90vh">
     <el-container>
       <el-header class="register-header">
         <h2>修改密码</h2>

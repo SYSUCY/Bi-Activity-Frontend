@@ -1,6 +1,6 @@
 <template>
   <div class="registerPage">
-    <div class="register-content-wrapper">
+    <div class="register-content-wrapper custom-card">
       <div id="registerDefaultPage">
         <el-container>
           <el-header class="register-header">
@@ -69,7 +69,6 @@ function navigateTo(path) {
   justify-content: center;
   align-items: center;
   height: 100vh; /* 让容器充满整个视口 */
-  background-color: #f5f5f5; /* 背景颜色 */
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -92,6 +91,19 @@ function navigateTo(path) {
   padding: 20px;
   box-sizing: border-box; /* 包含内边距 */
 }
+
+.custom-card {
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); /* 与 el-card 阴影类似 */
+  border-radius: 4px; /* 圆角，与 el-card 默认一致 */
+  transition: box-shadow 0.3s ease; /* 添加平滑过渡效果 */
+  background-color: #fff; /* 确保背景为白色 */
+  padding: 16px; /* 默认内边距 */
+}
+
+.custom-card:hover {
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2); /* 鼠标悬停时加深阴影 */
+}
+
 
 @media (max-width: 768px) {
   .register-content-wrapper {

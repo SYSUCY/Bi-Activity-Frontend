@@ -1,5 +1,5 @@
 <template> 
-  <div id="collegeForgetPage">
+  <div id="collegeForgetPage" style="height: 90vh">
     <el-container>
       <el-header class="register-header">
         <h2>忘记密码</h2>

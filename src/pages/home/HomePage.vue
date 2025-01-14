@@ -20,7 +20,5 @@ import BiData from "@/components/home/BiData.vue";
 <style scoped>
 #homePage {
   margin-bottom: 10px;
-  margin-left: 100px;
-  margin-right: 100px;
 }
 </style>

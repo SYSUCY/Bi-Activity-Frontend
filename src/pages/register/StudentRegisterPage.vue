@@ -1,5 +1,5 @@
 <template> 
-  <div id="studentRegisterPage">
+  <div id="studentRegisterPage" style="height: 90vh">
     <el-container>
       <el-header class="register-header">
         <h2>学生注册</h2>
