@@ -2,12 +2,13 @@
   <div id="collegeManagement">
     <el-button @click="isAddDialogVisible = true" type="primary">添加学院账号映射</el-button>
     <el-table :data="nameToAccount" style="width: 100%">
-      <el-table-column label="学院名称" prop="Name" width="600"></el-table-column>
-      <el-table-column label="学院账号" prop="Account" width="600"></el-table-column>
+      <el-table-column label="学院名称" prop="Id" width="400"></el-table-column>
+      <el-table-column label="学院名称" prop="Name" width="400"></el-table-column>
+      <el-table-column label="学院账号" prop="Account" width="500"></el-table-column>
       <el-table-column label="操作" width="300">
         <template #default="scope">
           <el-button @click="editNameToAccount(scope.row)" size="small">编辑</el-button>
-          <el-button @click="deleteNameToAccount(scope.row.account)" type="danger" size="small">删除</el-button>
+          <el-button @click="removeNameToAccount(scope.row.Id)" type="danger" size="small">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -47,8 +48,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
-import { getNameToAccount } from '@/api/register';
+import { ref, reactive, onMounted } from 'vue';
+import { getNameToAccount, postNameToAccount, putNameToAccount, deleteNameToAccount } from '@/api/register';
 import { ElMessage } from 'element-plus';
 
 const nameToAccount = ref([]);
@@ -58,7 +59,8 @@ const newMapping = reactive({
   Name: '', 
   Account: '' 
 });
-const editMapping = ref({ 
+const editMapping = reactive({ 
+  Id: '', 
   Name: '', 
   Account: '' 
 });
@@ -80,8 +82,7 @@ const fetchCollegeData = async () => {
 // 添加学院账号映射
 const addNameToAccount = async () => {
   try {
-    // 调用API添加 todo
-    const res = await addNameToAccount(newMapping.value);
+    const res = await postNameToAccount(newMapping);
     if (res.data.label === 200) {
       ElMessage.success('学院账号映射添加成功');
       isAddDialogVisible.value = false;
@@ -96,15 +97,17 @@ const addNameToAccount = async () => {
 
 // 编辑学院账号映射
 const editNameToAccount = (row) => {
-  editMapping.value = { ...row }; // 填充表单数据
+  // 填充表单数据
+  editMapping.Id = row.Id;
+  editMapping.Name = row.Name;
+  editMapping.Account = row.Account;
   isEditDialogVisible.value = true;
 };
 
 // 修改学院账号映射
 const updateNameToAccount = async () => {
   try {
-    // 调用API更新 todo
-    const res = await updateNameToAccount(editMapping.value);
+    const res = await putNameToAccount(editMapping.Id, editMapping);
     if (res.data.label === 200) {
       ElMessage.success('学院账号映射修改成功');
       isEditDialogVisible.value = false;
@@ -118,9 +121,8 @@ const updateNameToAccount = async () => {
 };
 
 // 删除学院账号映射
-const deleteNameToAccount = (row) => {
-  // 调用API删除 todo
-  deleteNameToAccountApi(row.id)
+const removeNameToAccount = (id) => {
+  deleteNameToAccount(id)
     .then(res => {
       if (res.data.label === 200) {
         ElMessage.success('删除成功');
