@@ -254,7 +254,7 @@ const handleSubmit = async () => {
       registration_deadline: formatDateTime(form.registration_deadline)
     }
 
-    await myAxios.post(`/api/studentPersonalCenter/activityManage/${studentStore.data.id}`, formData)
+    await myAxios.post('/api/studentPersonalCenter/activityManage', formData)
     
     ElMessage.success('活动发布成功，请等待审核')
     handleReset() // 重置表单

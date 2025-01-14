@@ -15,7 +15,7 @@
         <li><router-link to="/studentPersonalCenter/myMessages">我的消息</router-link></li>
         <li><router-link to="/studentPersonalCenter/activityRecords">活动记录</router-link></li>
         <li><router-link to="/studentPersonalCenter/publishActivity">发布活动</router-link></li>
-        <li><router-link to="/studentPersonalCenter/activityAdmissions">活动录取</router-link></li>
+        <!-- <li><router-link to="/studentPersonalCenter/activityAdmissions">活动录取</router-link></li> -->
         <li><router-link to="/studentPersonalCenter/securitySettings">安全设置</router-link></li>
         <!-- 可以继续添加其他模块的链接 -->
       </ul>
