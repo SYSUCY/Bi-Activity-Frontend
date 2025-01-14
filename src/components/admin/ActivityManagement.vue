@@ -17,7 +17,7 @@
       </el-table-column>
       <el-table-column label="操作" width="300">
         <template #default="scope">
-          <el-button @click="editActivityType(scope.row)" size="small">编辑</el-button>
+          <el-button @click="editActivityTypeHandler(scope.row)" size="small">编辑</el-button>
           <el-button @click="deleteActivityType(scope.row.id)" type="danger" size="small">删除</el-button>
         </template>
       </el-table-column>
@@ -52,8 +52,14 @@
 
     <!-- 修改活动类型表单 -->
     <el-dialog v-model="isEditDialogVisible" title="修改活动类型" width="80%">
-      <span class="dialog-footer">
+      <el-form :model="editActivityType" ref="form" label-width="120px">
+        <el-form-item label="活动类型名称" prop="typeName" :rules="[{ required: true, message: '请输入活动类型名称', trigger: 'blur' }]">
+          <el-input v-model="editActivityType.typeName" placeholder="请输入活动类型名称"></el-input>
+        </el-form-item>
+      </el-form>
+      <span class="dialog-footer" >
         <el-button @click="isEditDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="editVerify">修改</el-button>
       </span>
     </el-dialog>
   </div>
@@ -64,6 +70,7 @@ import { ref, onMounted, reactive } from "vue";
 import {getActivityTypeList} from "@/api/home/home.js";
 import myAxios from '@/request';
 import { ElMessage } from 'element-plus';
+import {addType, deleteType, editTypeName} from "@/api/home/admin.js";
 
 const isAddDialogVisible = ref(false);
 const isEditDialogVisible = ref(false);
@@ -101,7 +108,6 @@ const handleChange = (file) => {
   };
   reader.readAsDataURL(file.raw);
   imageUpload();
-  
 };
 
 const imageUpload = async() => {
@@ -134,19 +140,34 @@ const imageUpload = async() => {
   }
 }
 
-// 添加活动类型 todo
+// 添加活动类型
 const addActivityType = async () => {
   try {
-    imageUpload();
+    // 上传图片
+    await imageUpload();
+    // 发送请求
+    const data = {
+      typeName: newActivityType.typeName,
+      imageId: newActivityType.imageId
+    };
+    const res = await addType(data);
+    if (res.data.label === 200) {
+      ElMessage.success("添加成功");
+      isAddDialogVisible.value = false;
+      await getActivityTypeList();
+    }
   } catch (error) {
     console.error("Panic to add activity type:", error);
   }
 };
 
-// 删除活动类型 todo
+// 删除活动类型
 const deleteActivityType = async (id) => {
   try {
-    const res = await deleteActivityType(id);
+    const params = {
+      id: id
+    }
+    const res = await deleteType(params);
     if (res.data.label === 200) {
       typeList.value = typeList.value.filter(item => item.id !== id);  // 删除活动类型
     } else {
@@ -157,7 +178,40 @@ const deleteActivityType = async (id) => {
   }
 };
 
-// 编辑活动类型 todo
+// 编辑活动类型
+const editActivityTypeHandler = async (row) => {
+  isEditDialogVisible.value = true;
+  editActivityType.id = row.id;
+  editActivityType.typeName = row.typeName;
+}
+
+const editVerify = async () => {
+  try {
+    if (editActivityType.typeName === "") {
+      ElMessage.error("活动类型名称不能为空");
+      return
+    }
+    const params = {
+      id: editActivityType.id,
+      typeName: editActivityType.typeName
+    }
+    const res = await editTypeName(params);
+    if (res.data.label === 200) {
+      ElMessage.success("修改成功");
+      isEditDialogVisible.value = false;
+      for (let i = 0; i < typeList.value.length; i++) {
+        if (typeList.value[i].id === editActivityType.id) {
+          typeList.value[i].typeName = editActivityType.typeName;
+        }
+      }
+    } else {
+      ElMessage.error("修改失败");
+    }
+
+  } catch (e) {
+    console.error("Error editing activity type:", e);
+  }
+}
 
 
 // 获取活动类型列表

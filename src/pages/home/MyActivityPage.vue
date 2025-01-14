@@ -86,9 +86,9 @@
               >
                 <el-row>
                   <el-col :span="4" style="display: flex; flex-direction: column; align-items: flex-start;">
-                    <el-image style="width: 70px; height: 50px" :src="item.activityTypeImageUrl" fit="fill" />
+                    <el-image style="width: 50px; height: 50px" :src="item.activityTypeImageUrl" fit="fill" />
                   </el-col>
-                  <el-col :span="4" style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; margin-left: -20px">
+                  <el-col :span="4" style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end">
                     {{ item.activityTypeName }}
                   </el-col>
                   <el-col :span="8" :offset="4" style="display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end;">
