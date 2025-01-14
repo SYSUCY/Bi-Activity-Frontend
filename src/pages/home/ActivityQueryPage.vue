@@ -81,7 +81,7 @@
                     style="padding: 10px;"
                     :span="8"><div class="grid-content ep-bg-purple" />
               <el-card
-                  style="max-width: 100%; background: linear-gradient(to bottom, #8ab8e7, #3c96f2);"
+                  style="max-width: 100%;"
                   @click="clickActivityCard(item.id)"
               >
                 <el-row>

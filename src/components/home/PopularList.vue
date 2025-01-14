@@ -1,6 +1,6 @@
 <template>
   <div id="popularList">
-    <el-card style="max-width: 95%; min-width: 95%">
+    <el-card style="max-width: 95%; min-width: 95%; background: linear-gradient(to right, #ff7082, #fdc6cd);">
       <template #header>
         <div class="card-header">
           <el-row>
@@ -22,7 +22,7 @@
                   :span="8"><div class="grid-content ep-bg-purple"
           />
             <el-card
-                style="max-width: 100%; background: linear-gradient(to bottom, #8ab8e7, #3c96f2);"
+                style="max-width: 100%;"
                 @click="clickActivityCard(item.id)"
             >
               <template #header>

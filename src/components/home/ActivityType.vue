@@ -15,13 +15,13 @@
           </el-row>
         </div>
       </template>
-      <el-scrollbar height="400px">
+      <el-scrollbar height="750px">
         <el-row :gutter="24">
           <el-col
               v-for="(item) in typeList" :key="item.id"
-              :span="3"
+              :span="4"
           ><div class="grid-content ep-bg-purple" />
-            <el-card shadow="always" style="background-color: #feb47b" @click="clickTypeCard">
+            <el-card shadow="always" @click="clickTypeCard">
               <el-image :src="item.url" fit="cover" style="width: 100%; height: 100%;" />
               <div class="type">{{ item.typeName }}</div>
             </el-card>

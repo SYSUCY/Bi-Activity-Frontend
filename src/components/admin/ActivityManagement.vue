@@ -2,8 +2,8 @@
   <div id="activityManagement">
     <el-button @click="isAddDialogVisible = true" type="primary">添加活动类型</el-button>
     <el-table :data="typeList" style="width: 100%">
-      <el-table-column label="活动类型ID" prop="id" width="200"></el-table-column>
-      <el-table-column label="活动类型名称" prop="typeName" width="300"></el-table-column>
+      <el-table-column label="活动类型ID" prop="id" width="100"></el-table-column>
+      <el-table-column label="活动类型名称" prop="typeName" width="200"></el-table-column>
       <el-table-column label="活动展示图片" prop="url" width="600">
         <template #default="scope">
           <el-image
